@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#f2f4fb; --card:#ffffff; --primary:#4f46e5; --primary2:#6366f1;
-    --dark:#1f2333; --muted:#6b7280; --success:#10b981; --danger:#ef4444;
+    --dark:#1f2333; --muted:#6b7280; --success:#10b981; --danger:#ef4444; --accent:#f59e0b;
     --radius:18px; --shadow:0 6px 18px rgba(31,35,51,.08);
   }
   *{box-sizing:border-box;}
@@ -74,7 +74,6 @@
   .pending-banner{background:#fff7ea;border:1px solid #f5d99b;border-radius:12px;padding:10px 14px;font-size:12px;color:#8a6414;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
   .pending-banner button{border:none;background:#f59e0b;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;}
 
-  /* ===== เพิ่มใหม่: หลักฐาน ===== */
   .chip{display:inline-block;background:#eef0fb;color:var(--primary);font-size:12px;padding:4px 10px;border-radius:999px;margin:2px 4px 2px 0;text-decoration:none;}
   .evidence-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
   .evidence-item{position:relative;}
@@ -82,6 +81,15 @@
   .evidence-item .rm{position:absolute;top:-6px;right:-2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:18px;cursor:pointer;}
   .evidence-gallery{display:flex;flex-wrap:wrap;gap:8px;}
   .evidence-thumb-lg{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid #e2e5ec;}
+
+  /* ===== เพิ่มใหม่: Knowledge Search ===== */
+  fieldset{border:1px dashed #d8dbe8;border-radius:12px;margin-top:6px;padding:10px;}
+  legend{font-size:12px;color:var(--primary);font-weight:700;padding:0 4px;}
+  .relevance{font-size:11px;background:#fff7ea;color:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700;}
+  .kb-actions{display:flex;gap:8px;margin-top:10px;}
+  .kb-actions button{flex:1;padding:8px;border-radius:10px;border:1px solid #e2e5ec;background:#fbfbfe;font-size:13px;cursor:pointer;}
+  .kb-actions button:disabled{opacity:.5;cursor:not-allowed;}
+  .quicklink{display:block;text-align:center;font-size:12px;color:var(--muted);margin-top:10px;text-decoration:underline;background:none;border:none;cursor:pointer;width:100%;}
 </style>
 </head>
 <body>
@@ -97,7 +105,6 @@
 
   <main>
 
-    <!-- LOGIN VIEW -->
     <section class="view active" id="view-login">
       <div class="card" style="margin-top:30px;">
         <h3>👋 สวัสดีครับ กรุณาระบุตัวตนก่อนใช้งาน</h3>
@@ -108,7 +115,6 @@
       </div>
     </section>
 
-    <!-- HOME VIEW -->
     <section class="view" id="view-home">
       <p class="home-title">วันนี้คุณทำอะไร?</p>
       <div class="mic-wrap">
@@ -117,18 +123,18 @@
       </div>
       <div class="quickgrid">
         <button class="quickbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
-        <button class="quickbtn" id="pingBtn"><span class="ic">🔌</span>ทดสอบเชื่อมต่อ</button>
+        <button class="quickbtn" data-nav="search"><span class="ic">🔎</span>ค้นหาความรู้</button>
       </div>
+      <button class="quicklink" id="pingBtn" type="button">🔌 ทดสอบการเชื่อมต่อ</button>
       <p class="note">ข้อมูลที่บันทึกจากหน้านี้จะถูกส่งไปเก็บจริงที่ Google Sheets ของคุณ</p>
     </section>
 
-    <!-- CAPTURE VIEW -->
     <section class="view" id="view-capture">
       <button class="backbtn" data-nav="home">‹ กลับ</button>
       <div class="card">
         <div class="listen-status" id="listenStatus">แตะปุ่มเพื่อเริ่มพูด</div>
         <div class="wave" id="waveBox"><span></span><span></span><span></span><span></span><span></span></div>
-        <textarea id="transcriptBox" placeholder="พิมพ์หรือพูดสิ่งที่คุณทำวันนี้ เช่น 'วันนี้ไปถ่ายภาพงานประชุมที่อาคารสิริคุณากร ตอนเก้าโมงเช้า'"></textarea>
+        <textarea id="transcriptBox" placeholder="พิมพ์หรือพูดสิ่งที่คุณทำวันนี้ เช่น 'เครื่องฉายไม่มีภาพ ลองเปลี่ยน Input เป็น HDMI แล้วใช้ได้'"></textarea>
         <div class="btn-row" style="margin-top:10px;">
           <button class="btn btn-secondary" id="toggleListenBtn" type="button">🎙️ เริ่มพูด</button>
           <button class="btn btn-primary" id="analyzeBtn" type="button">🧠 วิเคราะห์</button>
@@ -136,7 +142,6 @@
       </div>
     </section>
 
-    <!-- PREVIEW VIEW -->
     <section class="view" id="view-preview">
       <button class="backbtn" data-nav="capture">‹ แก้ไขข้อความ</button>
       <div class="card">
@@ -158,11 +163,17 @@
         <div class="field"><label>ผู้เกี่ยวข้อง</label><input type="text" id="pv-people"></div>
         <div class="field"><label>รายละเอียด</label><textarea id="pv-detail"></textarea></div>
         <div class="field"><label>คำสำคัญ (Keyword)</label><input type="text" id="pv-keywords"></div>
+
+        <fieldset id="pv-problem-fs">
+          <legend>🛠 บันทึกวิธีแก้ปัญหา (จะกลายเป็น Knowledge ให้คนอื่นค้นหาได้)</legend>
+          <div class="field"><label>สาเหตุที่พบ</label><textarea id="pv-cause" placeholder="เช่น เลือก Input เป็น VGA ทั้งที่ต่อสาย HDMI"></textarea></div>
+          <div class="field"><label>วิธีแก้</label><textarea id="pv-solution" placeholder="เช่น กด Source แล้วเลือก HDMI"></textarea></div>
+          <div class="field"><label>ผลลัพธ์</label><textarea id="pv-result" placeholder="เช่น เครื่องฉายกลับมาใช้งานได้"></textarea></div>
+        </fieldset>
       </div>
       <button class="btn btn-primary" id="confirmSaveBtn" type="button">✅ ยืนยัน & บันทึกจริง</button>
     </section>
 
-    <!-- EVIDENCE ADD VIEW (ใช้ทั้งตอนบันทึกใหม่ และเพิ่มย้อนหลัง) -->
     <section class="view" id="view-evidence">
       <button class="backbtn" id="evidenceBackBtn" type="button">‹ กลับ</button>
       <div class="card">
@@ -182,7 +193,6 @@
       </div>
     </section>
 
-    <!-- HISTORY VIEW -->
     <section class="view" id="view-history">
       <button class="backbtn" data-nav="home">‹ กลับ</button>
       <h3 style="margin-top:0;">📚 ประวัติของฉัน</h3>
@@ -193,7 +203,6 @@
       <button class="btn btn-ghost hidden" id="loadMoreBtn" type="button">โหลดเพิ่มเติม</button>
     </section>
 
-    <!-- DETAIL VIEW (หน้ารายละเอียดงาน + หลักฐาน) -->
     <section class="view" id="view-detail">
       <button class="backbtn" data-nav="history">‹ กลับไปประวัติ</button>
       <div class="card" id="detailCard"></div>
@@ -205,6 +214,22 @@
       </div>
     </section>
 
+    <!-- ===== ใหม่: SEARCH KNOWLEDGE VIEW ===== -->
+    <section class="view" id="view-search">
+      <button class="backbtn" data-nav="home">‹ กลับ</button>
+      <h3 style="margin-top:0;">🔎 ฉันกำลังเจอปัญหา...</h3>
+      <p class="note" style="margin-top:-6px;margin-bottom:10px;">พิมพ์หรือพูดปัญหาที่พบ ระบบจะค้นจากความรู้ที่เคยมีคนบันทึกไว้</p>
+      <div class="field">
+        <div class="btn-row">
+          <input type="text" id="searchInput" placeholder="เช่น เครื่องฉายไม่มีภาพ" style="flex:2;padding:10px 12px;border:1px solid #e2e5ec;border-radius:12px;font-size:14px;">
+          <button class="btn btn-secondary" id="searchMicBtn" type="button" style="flex:0 0 52px;padding:10px;">🎙️</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="searchBtn" type="button">ค้นหาความรู้</button>
+      <div class="spinner hidden" id="searchSpinner"></div>
+      <div id="searchResults" style="margin-top:14px;"></div>
+    </section>
+
   </main>
 
   <div class="toast" id="toast"></div>
@@ -214,20 +239,12 @@
 (function(){
   'use strict';
 
-  /* =========================================================
-   * CONFIGURATION — ⚠️ แก้ URL นี้ให้เป็นของคุณ (เหมือนเดิม ไม่เปลี่ยน)
-   * =========================================================*/
   const CONFIG = {
-    API_URL: 'https://script.google.com/a/macros/kku.ac.th/s/AKfycbxiD92TmykqPsf9UbNH3I4JCiur2phMJXxljeUJ0GslMKPlFhzLv_tQQzXKVfM6Djs/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbxiD92TmykqPsf9UbNH3I4JCiur2phMJXxljeUJ0GslMKPlFhzLv_tQQzXKVfM6Djs/exec',
     HISTORY_PAGE_SIZE: 15,
-    IMAGE_MAX_SIZE: 1280 // ลดขนาดภาพก่อนอัปโหลด (พิกเซล) เพื่อลด Payload
+    IMAGE_MAX_SIZE: 1280
   };
 
-  /* =========================================================
-   * ข้อมูลหมวดหมู่ (ต้องตรงกับ CATEGORIES ที่ Seed ไว้ในชีต)
-   * requiresEvidence = true หมายถึงหลังบันทึกงานประเภทนี้
-   * ระบบจะถามทันทีว่าต้องการเพิ่มรูปหลักฐานหรือไม่
-   * =========================================================*/
   const CATEGORY_META = {
     photography:{icon:'📸', name:'งานถ่ายภาพ', requiresEvidence:true},
     video:{icon:'🎥', name:'งานวิดีโอ', requiresEvidence:true},
@@ -239,27 +256,16 @@
   };
   function categoryMeta(id){ return CATEGORY_META[id] || CATEGORY_META.other; }
 
-  /* =========================================================
-   * STATE — เก็บใน Memory ของหน้านี้เท่านั้น (หายเมื่อรีเฟรช)
-   * =========================================================*/
   const state = {
-    user: null,
-    currentDraft: null,
-    pendingQueue: [],          // { type:'workLog'|'evidence', payload, clientRequestId }
-    historyOffset: 0,
-    historyItems: [],
-    isListening: false,
-    evidenceStaging: [],       // หลักฐานที่เพิ่มไว้ก่อนกดบันทึก (ยังไม่ส่งขึ้นเซิร์ฟเวอร์)
-    evidenceContext: null,     // { workLogId, categoryLabel, allowSkip, returnView }
-    detailWorkLog: null
+    user: null, currentDraft: null, pendingQueue: [],
+    historyOffset: 0, historyItems: [], isListening: false,
+    evidenceStaging: [], evidenceContext: null, detailWorkLog: null,
+    isSearchListening: false
   };
 
   const $ = sel => document.querySelector(sel);
   const $all = sel => document.querySelectorAll(sel);
 
-  /* =========================================================
-   * HELPERS
-   * =========================================================*/
   let toastTimer = null;
   function toast(msg, isError){
     const t = $('#toast');
@@ -269,13 +275,11 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(()=> t.classList.remove('show'), 3200);
   }
-  // ป้องกัน XSS: แปลงอักขระ HTML ก่อนแสดงผล เพราะข้อความมาจากผู้ใช้
   function escapeHtml(str){
     const div = document.createElement('div');
     div.textContent = str || '';
     return div.innerHTML;
   }
-  // อนุญาตแสดงเฉพาะลิงก์ http/https เท่านั้น ป้องกัน javascript: URI
   function safeHref(url){ return /^https?:\/\//i.test(url||'') ? url : '#'; }
 
   function showView(name){
@@ -316,14 +320,8 @@
     return d.getDate()+' '+months[d.getMonth()]+' '+(d.getFullYear()+543);
   }
 
-  /* =========================================================
-   * API SERVICE
-   * =========================================================*/
   const Api = {
     async post(action, data){
-      if(!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0){
-        throw new Error('ยังไม่ได้ตั้งค่า API_URL');
-      }
       const res = await fetch(CONFIG.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -333,9 +331,6 @@
       return res.json();
     },
     async get(action, params){
-      if(!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0){
-        throw new Error('ยังไม่ได้ตั้งค่า API_URL');
-      }
       const q = new URLSearchParams({ action, ...params }).toString();
       const res = await fetch(CONFIG.API_URL + '?' + q, { method: 'GET' });
       if(!res.ok) throw new Error('เซิร์ฟเวอร์ตอบกลับผิดพลาด (HTTP ' + res.status + ')');
@@ -343,9 +338,6 @@
     }
   };
 
-  /* =========================================================
-   * LOGIN
-   * =========================================================*/
   $('#loginBtn').addEventListener('click', ()=>{
     const name = $('#loginName').value.trim();
     const email = $('#loginEmail').value.trim();
@@ -364,12 +356,10 @@
     }catch(err){ toast('❌ เชื่อมต่อไม่ได้: ' + err.message, true); }
   });
 
-  /* =========================================================
-   * SPEECH SERVICE
-   * =========================================================*/
   const SpeechService = {
     recognition: null,
     supported: !!(window.SpeechRecognition || window.webkitSpeechRecognition),
+    _onresult: null, _onend: null,
     init(){
       const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
       if(!Rec) return;
@@ -380,17 +370,16 @@
       this.recognition.onresult = (e)=>{
         let text='';
         for(let i=0;i<e.results.length;i++){ text += e.results[i][0].transcript; }
-        $('#transcriptBox').value = text;
+        if(this._onresult) this._onresult(text);
       };
       this.recognition.onerror = ()=>{ toast('⚠️ ใช้เสียงไม่ได้ กรุณาพิมพ์ข้อความแทน', true); this.stop(); };
-      this.recognition.onend = ()=>{
-        if(state.isListening){
-          $('#listenStatus').textContent = 'หยุดฟังแล้ว — ตรวจสอบ/แก้ไขข้อความได้เลย';
-          $('#waveBox').classList.remove('on');
-        }
-      };
+      this.recognition.onend = ()=>{ if(this._onend) this._onend(); };
     },
-    start(){ if(!this.recognition) return false; try{ this.recognition.start(); return true; }catch(e){ return false; } },
+    start(onResult, onEnd){
+      if(!this.recognition) return false;
+      this._onresult = onResult; this._onend = onEnd;
+      try{ this.recognition.start(); return true; }catch(e){ return false; }
+    },
     stop(){ if(this.recognition){ try{ this.recognition.stop(); }catch(e){} } }
   };
   SpeechService.init();
@@ -406,7 +395,15 @@
   $('#micBtn').addEventListener('click', ()=>{ resetCaptureUI(); showView('capture'); });
   $('#toggleListenBtn').addEventListener('click', ()=>{
     if(!state.isListening){
-      const ok = SpeechService.start();
+      const ok = SpeechService.start(
+        (text)=>{ $('#transcriptBox').value = text; },
+        ()=>{
+          if(state.isListening){
+            $('#listenStatus').textContent = 'หยุดฟังแล้ว — ตรวจสอบ/แก้ไขข้อความได้เลย';
+            $('#waveBox').classList.remove('on');
+          }
+        }
+      );
       if(!ok){ toast('⚠️ ไม่สามารถเข้าถึงไมโครโฟนได้', true); return; }
       state.isListening = true;
       $('#listenStatus').textContent = '🎙️ กำลังฟัง...';
@@ -418,9 +415,22 @@
     }
   });
 
-  /* =========================================================
-   * AI ANALYZE (Rule-based) — ไม่แต่งข้อมูล
-   * =========================================================*/
+  // ปุ่มไมค์เล็กในหน้าค้นหา
+  $('#searchMicBtn').addEventListener('click', ()=>{
+    if(!state.isSearchListening){
+      const ok = SpeechService.start(
+        (text)=>{ $('#searchInput').value = text; },
+        ()=>{ state.isSearchListening = false; $('#searchMicBtn').textContent='🎙️'; }
+      );
+      if(!ok){ toast('⚠️ ไม่สามารถเข้าถึงไมโครโฟนได้', true); return; }
+      state.isSearchListening = true;
+      $('#searchMicBtn').textContent = '⏹';
+    } else {
+      SpeechService.stop(); state.isSearchListening = false;
+      $('#searchMicBtn').textContent = '🎙️';
+    }
+  });
+
   const CATEGORY_KEYWORDS = {
     photography:['ถ่ายภาพ','ถ่ายรูป','ภาพถ่าย','กล้อง'],
     video:['ถ่ายวิดีโอ','วิดีโอ','วีดีโอ'],
@@ -457,14 +467,30 @@
     const words = text.split(/\s+/).map(w=>w.trim()).filter(w=>w.length>=3 && !stop.includes(w));
     return [...new Set(words)].slice(0,6);
   }
-  function analyzeText(text){
+  // แยกสาเหตุ/วิธีแก้/ผลลัพธ์แบบง่ายจากประโยคที่พูดถึงการแก้ปัญหา
+  function extractProblemParts(text){
+    const causeM = text.match(/(?:เพราะ|เนื่องจาก|สาเหตุ(?:คือ|มาจาก)?)\s*([^.。]+)/);
+    const solM = text.match(/(?:ลองเปลี่ยน|เปลี่ยนเป็น|แก้โดย|วิธีแก้คือ|ลองแก้)\s*([^.。]+)/);
+    const resM = text.match(/(?:สุดท้าย|ทำให้|จึง|ก็ใช้ได้|กลับมาใช้งานได้)\s*([^.。]*)/);
     return {
-      category: detectCategory(text), date: todayISO(),
+      cause: causeM ? causeM[1].trim() : '',
+      solution: solM ? solM[1].trim() : '',
+      result: resM ? (resM[1].trim()||'') : ''
+    };
+  }
+  function analyzeText(text){
+    const category = detectCategory(text);
+    const result = {
+      category, date: todayISO(),
       time: extractTime(text) || 'ไม่พบข้อมูล',
       location: extractLocation(text) || 'ไม่พบข้อมูล',
       people: extractPeople(text) || 'ไม่พบข้อมูล',
       detail: text, keywords: extractKeywords(text)
     };
+    if(category === 'problem'){
+      result.problem = extractProblemParts(text);
+    }
+    return result;
   }
 
   $('#analyzeBtn').addEventListener('click', ()=>{
@@ -484,29 +510,46 @@
     $('#pv-people').value = d.people;
     $('#pv-detail').value = d.detail;
     $('#pv-keywords').value = (d.keywords||[]).join(', ');
+    const isProblem = d.category === 'problem';
+    $('#pv-problem-fs').classList.toggle('hidden', !isProblem);
+    if(d.problem){
+      $('#pv-cause').value = d.problem.cause || '';
+      $('#pv-solution').value = d.problem.solution || '';
+      $('#pv-result').value = d.problem.result || '';
+    } else {
+      $('#pv-cause').value=''; $('#pv-solution').value=''; $('#pv-result').value='';
+    }
   }
+  $('#pv-category').addEventListener('change', e=>{
+    $('#pv-problem-fs').classList.toggle('hidden', e.target.value !== 'problem');
+  });
 
-  /* =========================================================
-   * SAVE WORK LOG
-   * =========================================================*/
   function buildWorkLogPayload(draft, clientRequestId){
-    return {
+    const payload = {
       category: draft.category, date: draft.date, time: draft.time,
       location: draft.location, people: draft.people, detail: draft.detail,
       keywords: draft.keywords, createdBy: state.user ? state.user.email : 'unknown',
       clientRequestId
     };
+    if(draft.category === 'problem'){
+      payload.cause = draft.cause; payload.solution = draft.solution; payload.result = draft.result;
+    }
+    return payload;
   }
 
   $('#confirmSaveBtn').addEventListener('click', async ()=>{
+    const category = $('#pv-category').value;
     const draft = {
-      category: $('#pv-category').value,
+      category,
       date: $('#pv-date').value,
       time: $('#pv-time').value || 'ไม่พบข้อมูล',
       location: $('#pv-location').value || 'ไม่พบข้อมูล',
       people: $('#pv-people').value || 'ไม่พบข้อมูล',
       detail: $('#pv-detail').value,
-      keywords: $('#pv-keywords').value.split(',').map(k=>k.trim()).filter(Boolean)
+      keywords: $('#pv-keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
+      cause: $('#pv-cause').value || 'ไม่พบข้อมูล',
+      solution: $('#pv-solution').value || 'ไม่พบข้อมูล',
+      result: $('#pv-result').value || 'ไม่พบข้อมูล'
     };
     const clientRequestId = genClientRequestId();
     const payload = buildWorkLogPayload(draft, clientRequestId);
@@ -516,19 +559,13 @@
     try{
       const res = await Api.post('saveWorkLog', payload);
       if(res.success){
-        toast(res.duplicate ? 'รายการนี้ถูกบันทึกไปแล้ว' : ('✅ บันทึกสำเร็จ! +' + (res.exp||0) + ' EXP'));
-        const meta = categoryMeta(draft.category);
+        let msg = res.duplicate ? 'รายการนี้ถูกบันทึกไปแล้ว' : ('✅ บันทึกสำเร็จ! +' + (res.exp||0) + ' EXP');
+        if(res.knowledgeId) msg += ' 🧠 สร้าง Knowledge ใหม่แล้ว';
+        toast(msg);
+        const meta = categoryMeta(category);
         if(meta.requiresEvidence && !res.duplicate){
-          // งานประเภทนี้ควรมีหลักฐาน → ถามทันที (แต่ยังกด "ข้าม" ได้)
-          openEvidenceFlow({
-            workLogId: res.workLogId,
-            categoryLabel: meta.icon + ' ' + meta.name,
-            allowSkip: true,
-            returnView: 'history'
-          });
-        } else {
-          showView('history');
-        }
+          openEvidenceFlow({ workLogId: res.workLogId, categoryLabel: meta.icon+' '+meta.name, allowSkip:true, returnView:'history' });
+        } else { showView('history'); }
       } else { throw new Error(res.error || 'บันทึกไม่สำเร็จ'); }
     } catch(err){
       state.pendingQueue.push({ type:'workLog', payload, clientRequestId });
@@ -539,21 +576,17 @@
     }
   });
 
-  /* =========================================================
-   * EVIDENCE FLOW — ใช้ทั้งตอนบันทึกใหม่ และเพิ่มย้อนหลังจากหน้าประวัติ
-   * =========================================================*/
   function openEvidenceFlow(context){
     state.evidenceContext = context;
     state.evidenceStaging = [];
     $('#evidenceContextTitle').textContent = '📷 ' + context.categoryLabel;
     $('#evidenceContextSub').textContent = context.allowSkip
       ? 'ต้องการเพิ่มรูปภาพ/ลิงก์เพื่อยืนยันการทำงานหรือไม่?'
-      : 'เพิ่มหลักฐานเพิ่มเติมให้กับงานนี้ (เช่น ใบประกาศ, รูปร่วมงาน, ลิงก์อัลบั้ม)';
+      : 'เพิ่มหลักฐานเพิ่มเติมให้กับงานนี้';
     $('#skipEvidenceBtn').classList.toggle('hidden', !context.allowSkip);
     renderEvidenceStaging();
     showView('evidence');
   }
-
   $('#evidenceBackBtn').addEventListener('click', ()=>{
     const target = state.evidenceContext ? state.evidenceContext.returnView : 'home';
     if(target === 'detail' && state.detailWorkLog){ showView('detail'); loadDetailEvidence(state.detailWorkLog.workLogId); }
@@ -565,7 +598,6 @@
     showView(target);
     if(target==='history') loadHistory(true);
   });
-
   function renderEvidenceStaging(){
     const box = $('#evidenceStagingList');
     box.innerHTML = state.evidenceStaging.map((ev,i)=>{
@@ -578,11 +610,8 @@
       btn.addEventListener('click', ()=>{ state.evidenceStaging.splice(Number(btn.dataset.idx),1); renderEvidenceStaging(); });
     });
   }
-
   $('#takePhotoBtn').addEventListener('click', ()=> $('#cameraInput').click());
   $('#pickPhotoBtn').addEventListener('click', ()=> $('#galleryInput').click());
-
-  // ลดขนาดภาพด้วย Canvas ก่อนอัปโหลด (ลด Payload / ประหยัดพื้นที่ Drive)
   function resizeImageFile(file, maxSize){
     return new Promise((resolve, reject)=>{
       const reader = new FileReader();
@@ -620,25 +649,21 @@
   }
   handleFileInput($('#cameraInput'));
   handleFileInput($('#galleryInput'));
-
   $('#addLinkBtn').addEventListener('click', ()=>{
     const url = prompt('วางลิงก์ผลงาน เช่น Google Drive / YouTube / Google Photos');
     if(!url || !url.trim()) return;
-    if(!/^https?:\/\//i.test(url.trim())){ toast('กรุณาวางลิงก์ที่ถูกต้อง (ต้องเริ่มด้วย http:// หรือ https://)', true); return; }
+    if(!/^https?:\/\//i.test(url.trim())){ toast('กรุณาวางลิงก์ที่ถูกต้อง', true); return; }
     state.evidenceStaging.push({ type:'link', url:url.trim() });
     renderEvidenceStaging();
   });
-
   $('#saveEvidenceBtn').addEventListener('click', async ()=>{
     if(state.evidenceStaging.length===0){ toast('กรุณาเพิ่มรูปภาพหรือลิงก์ก่อน หรือกด "ข้ามไปก่อน"', true); return; }
     const btn = $('#saveEvidenceBtn');
     btn.disabled = true;
     $('#evidenceUploadSpinner').classList.remove('hidden');
-
     let successCount = 0, totalExp = 0;
     const items = state.evidenceStaging.slice();
     state.evidenceStaging = [];
-
     for(const ev of items){
       const clientRequestId = genClientRequestId();
       const payload = {
@@ -650,32 +675,21 @@
         const res = await Api.post('saveEvidence', payload);
         if(res.success){ successCount++; totalExp += (res.exp||0); }
         else throw new Error(res.error || 'บันทึกไม่สำเร็จ');
-      }catch(err){
-        state.pendingQueue.push({ type:'evidence', payload, clientRequestId });
-      }
+      }catch(err){ state.pendingQueue.push({ type:'evidence', payload, clientRequestId }); }
     }
-
     $('#evidenceUploadSpinner').classList.add('hidden');
     btn.disabled = false;
-
     if(successCount > 0) toast(`✅ บันทึกหลักฐาน ${successCount} รายการสำเร็จ +${totalExp} EXP`);
     if(state.pendingQueue.length > 0){ toast('⚠️ มีบางรายการค้างอยู่ รอส่งใหม่อัตโนมัติ', true); renderPendingBanner(); }
-
     const target = state.evidenceContext.returnView;
     if(target === 'detail' && state.detailWorkLog){ showView('detail'); loadDetailEvidence(state.detailWorkLog.workLogId); }
     else { showView('history'); loadHistory(true); }
   });
 
-  /* =========================================================
-   * PENDING QUEUE — ป้องกันข้อมูลหายเมื่อเน็ตขัดข้อง
-   * =========================================================*/
   function renderPendingBanner(){
     const wrap = $('#pendingBannerWrap');
     if(state.pendingQueue.length === 0){ wrap.innerHTML=''; return; }
-    wrap.innerHTML = `<div class="pending-banner">
-      <span>⚠️ มี ${state.pendingQueue.length} รายการรอส่งใหม่</span>
-      <button id="retryQueueBtn">ลองส่งใหม่</button>
-    </div>`;
+    wrap.innerHTML = `<div class="pending-banner"><span>⚠️ มี ${state.pendingQueue.length} รายการรอส่งใหม่</span><button id="retryQueueBtn">ลองส่งใหม่</button></div>`;
     $('#retryQueueBtn').addEventListener('click', flushPendingQueue);
   }
   async function flushPendingQueue(){
@@ -694,9 +708,6 @@
     if(state.pendingQueue.length === 0) toast('✅ ส่งข้อมูลที่ค้างอยู่สำเร็จทั้งหมด');
   }
 
-  /* =========================================================
-   * HISTORY
-   * =========================================================*/
   async function loadHistory(reset){
     renderPendingBanner();
     if(reset){ state.historyOffset = 0; state.historyItems = []; $('#historyList').innerHTML=''; }
@@ -740,9 +751,6 @@
   }
   $('#loadMoreBtn').addEventListener('click', ()=> loadHistory(false));
 
-  /* =========================================================
-   * DETAIL VIEW
-   * =========================================================*/
   function openDetail(item){
     state.detailWorkLog = item;
     renderDetailCard(item);
@@ -751,6 +759,17 @@
   }
   function renderDetailCard(w){
     const meta = categoryMeta(w.category);
+    let problemHtml = '';
+    if(w.category === 'problem'){
+      problemHtml = `
+        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">สาเหตุ</p>
+        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.cause||'ไม่พบข้อมูล')}</p>
+        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">วิธีแก้</p>
+        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.solution||'ไม่พบข้อมูล')}</p>
+        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">ผลลัพธ์</p>
+        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.result||'ไม่พบข้อมูล')}</p>
+      `;
+    }
     $('#detailCard').innerHTML = `
       <h3>${meta.icon} ${meta.name}</h3>
       <div class="meta">${formatDateThai(w.date)} • ${w.time} • 📍${escapeHtml(w.location)}</div>
@@ -758,6 +777,7 @@
       <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.people)}</p>
       <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">รายละเอียด</p>
       <p style="margin:0;font-size:14px;">${escapeHtml(w.detail)}</p>
+      ${problemHtml}
       <div class="meta" style="margin-top:12px;">รหัส: ${w.workLogId} • +${w.exp} EXP</div>
     `;
   }
@@ -789,9 +809,68 @@
     openEvidenceFlow({ workLogId: w.workLogId, categoryLabel: meta.icon+' '+meta.name, allowSkip:false, returnView:'detail' });
   });
 
-  /* =========================================================
-   * INIT
-   * =========================================================*/
+  /* ============================================================
+   * SEARCH KNOWLEDGE — ค้นหาความรู้จากปัญหาที่เคยมีคนบันทึกไว้
+   * ============================================================*/
+  async function doSearch(){
+    const query = $('#searchInput').value.trim();
+    if(!query){ toast('กรุณาพิมพ์หรือพูดคำค้นก่อน', true); return; }
+    if(state.isSearchListening){ SpeechService.stop(); state.isSearchListening=false; $('#searchMicBtn').textContent='🎙️'; }
+
+    $('#searchSpinner').classList.remove('hidden');
+    $('#searchResults').innerHTML = '';
+    try{
+      const res = await Api.get('searchKnowledge', { q: query, searchedBy: state.user ? state.user.email : 'unknown' });
+      if(!res.success) throw new Error(res.error || 'ค้นหาไม่สำเร็จ');
+      renderSearchResults(res.items);
+    }catch(err){
+      $('#searchResults').innerHTML = '<p class="note">ไม่สามารถค้นหาได้: '+escapeHtml(err.message)+'</p>';
+    } finally { $('#searchSpinner').classList.add('hidden'); }
+  }
+  $('#searchBtn').addEventListener('click', doSearch);
+  $('#searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') doSearch(); });
+
+  function renderSearchResults(items){
+    const box = $('#searchResults');
+    if(!items || items.length===0){
+      box.innerHTML = '<p class="note">ไม่พบข้อมูลที่เกี่ยวข้อง — ลองใช้คำอื่น หรือถ้าคุณเพิ่งแก้ปัญหานี้ได้ ลองบันทึกไว้ที่หน้า 🎙️ เพื่อสร้าง Knowledge ใหม่ให้คนอื่น</p>';
+      return;
+    }
+    box.innerHTML = items.map(k=>`
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;gap:8px;">
+          <b>🖥️ ${escapeHtml(k.problemTitle)}</b>
+          <span class="relevance">${k.relevance}</span>
+        </div>
+        <p style="font-size:13px;margin:8px 0 4px;"><b>สาเหตุที่เคยพบ:</b> ${escapeHtml(k.cause)}</p>
+        <p style="font-size:13px;margin:4px 0;"><b>วิธีแก้:</b> ${escapeHtml(k.solution)}</p>
+        <p style="font-size:13px;margin:4px 0;"><b>ผลลัพธ์:</b> ${escapeHtml(k.result)}</p>
+        <div class="meta" style="margin-top:6px;">โดย ${escapeHtml(k.createdBy||'ไม่ทราบ')} • ${formatDateThai(k.createdAt ? k.createdAt.slice(0,10) : '')}</div>
+        <div class="kb-actions">
+          <button data-fb="1" data-id="${k.knowledgeId}">👍 ช่วยได้ (${k.helpfulCount})</button>
+          <button data-fb="0" data-id="${k.knowledgeId}">👎 ไม่ช่วย (${k.notHelpfulCount})</button>
+        </div>
+      </div>
+    `).join('');
+    box.querySelectorAll('[data-fb]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const knowledgeId = btn.dataset.id;
+        const helpful = btn.dataset.fb === '1';
+        box.querySelectorAll(`[data-id="${knowledgeId}"]`).forEach(b=> b.disabled = true);
+        try{
+          const res = await Api.post('submitFeedback', { knowledgeId, helpful });
+          if(res.success){
+            toast(helpful ? '👍 ขอบคุณสำหรับความคิดเห็น! เจ้าของความรู้จะได้ EXP' : 'ขอบคุณสำหรับความคิดเห็น');
+            doSearch(); // โหลดผลลัพธ์ใหม่เพื่ออัปเดตตัวเลข
+          } else { throw new Error(res.error); }
+        }catch(err){
+          toast('⚠️ ส่งความคิดเห็นไม่สำเร็จ: ' + err.message, true);
+          box.querySelectorAll(`[data-id="${knowledgeId}"]`).forEach(b=> b.disabled = false);
+        }
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', ()=>{ updateNetBadge(); resetCaptureUI(); });
   updateNetBadge();
   resetCaptureUI();
