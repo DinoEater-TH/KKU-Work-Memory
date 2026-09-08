@@ -82,7 +82,6 @@
   .evidence-gallery{display:flex;flex-wrap:wrap;gap:8px;}
   .evidence-thumb-lg{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid #e2e5ec;}
 
-  /* ===== เพิ่มใหม่: Knowledge Search ===== */
   fieldset{border:1px dashed #d8dbe8;border-radius:12px;margin-top:6px;padding:10px;}
   legend{font-size:12px;color:var(--primary);font-weight:700;padding:0 4px;}
   .relevance{font-size:11px;background:#fff7ea;color:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700;}
@@ -90,6 +89,20 @@
   .kb-actions button{flex:1;padding:8px;border-radius:10px;border:1px solid #e2e5ec;background:#fbfbfe;font-size:13px;cursor:pointer;}
   .kb-actions button:disabled{opacity:.5;cursor:not-allowed;}
   .quicklink{display:block;text-align:center;font-size:12px;color:var(--muted);margin-top:10px;text-decoration:underline;background:none;border:none;cursor:pointer;width:100%;}
+
+  /* ===== เพิ่มใหม่: Profile ===== */
+  .progress-outer{background:#e9ebf5;border-radius:999px;height:10px;overflow:hidden;margin:6px 0 4px;}
+  .progress-inner{background:linear-gradient(90deg,var(--primary),var(--accent));height:100%;border-radius:999px;transition:width .4s;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stat-box{background:#f7f8fd;border-radius:12px;padding:10px;text-align:center;}
+  .stat-box b{display:block;font-size:20px;color:var(--primary);}
+  .stat-box span{font-size:11px;color:var(--muted);}
+  .badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+  .badge{text-align:center;font-size:11px;color:var(--muted);opacity:.35;}
+  .badge.earned{opacity:1;color:var(--dark);font-weight:600;}
+  .badge .bic{font-size:26px;display:block;}
+  .cat-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0f1f7;}
+  .cat-row:last-child{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -125,6 +138,7 @@
         <button class="quickbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
         <button class="quickbtn" data-nav="search"><span class="ic">🔎</span>ค้นหาความรู้</button>
       </div>
+      <button class="btn btn-secondary" data-nav="profile" type="button" style="margin-top:12px;">👤 โปรไฟล์ของฉัน</button>
       <button class="quicklink" id="pingBtn" type="button">🔌 ทดสอบการเชื่อมต่อ</button>
       <p class="note">ข้อมูลที่บันทึกจากหน้านี้จะถูกส่งไปเก็บจริงที่ Google Sheets ของคุณ</p>
     </section>
@@ -166,9 +180,9 @@
 
         <fieldset id="pv-problem-fs">
           <legend>🛠 บันทึกวิธีแก้ปัญหา (จะกลายเป็น Knowledge ให้คนอื่นค้นหาได้)</legend>
-          <div class="field"><label>สาเหตุที่พบ</label><textarea id="pv-cause" placeholder="เช่น เลือก Input เป็น VGA ทั้งที่ต่อสาย HDMI"></textarea></div>
-          <div class="field"><label>วิธีแก้</label><textarea id="pv-solution" placeholder="เช่น กด Source แล้วเลือก HDMI"></textarea></div>
-          <div class="field"><label>ผลลัพธ์</label><textarea id="pv-result" placeholder="เช่น เครื่องฉายกลับมาใช้งานได้"></textarea></div>
+          <div class="field"><label>สาเหตุที่พบ</label><textarea id="pv-cause"></textarea></div>
+          <div class="field"><label>วิธีแก้</label><textarea id="pv-solution"></textarea></div>
+          <div class="field"><label>ผลลัพธ์</label><textarea id="pv-result"></textarea></div>
         </fieldset>
       </div>
       <button class="btn btn-primary" id="confirmSaveBtn" type="button">✅ ยืนยัน & บันทึกจริง</button>
@@ -214,7 +228,6 @@
       </div>
     </section>
 
-    <!-- ===== ใหม่: SEARCH KNOWLEDGE VIEW ===== -->
     <section class="view" id="view-search">
       <button class="backbtn" data-nav="home">‹ กลับ</button>
       <h3 style="margin-top:0;">🔎 ฉันกำลังเจอปัญหา...</h3>
@@ -228,6 +241,40 @@
       <button class="btn btn-primary" id="searchBtn" type="button">ค้นหาความรู้</button>
       <div class="spinner hidden" id="searchSpinner"></div>
       <div id="searchResults" style="margin-top:14px;"></div>
+    </section>
+
+    <!-- ===== ใหม่: PROFILE VIEW ===== -->
+    <section class="view" id="view-profile">
+      <button class="backbtn" data-nav="home">‹ กลับ</button>
+      <h3 style="margin-top:0;">👤 Work Profile</h3>
+      <div class="spinner" id="profileSpinner"></div>
+      <div id="profileContent" class="hidden">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <b id="profLevelName" style="font-size:16px;">Level 1 — ชาวบ้าน</b>
+            <span id="profExp" style="color:var(--muted);font-size:13px;">0 EXP</span>
+          </div>
+          <div class="progress-outer"><div class="progress-inner" id="profBar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--muted);" id="profNext"></div>
+        </div>
+        <div class="card">
+          <h3>📊 สถิติ</h3>
+          <div class="stat-grid">
+            <div class="stat-box"><b id="statLogs">0</b><span>บันทึกงาน</span></div>
+            <div class="stat-box"><b id="statProblems">0</b><span>แก้ปัญหา</span></div>
+            <div class="stat-box"><b id="statKnowledge">0</b><span>Knowledge</span></div>
+            <div class="stat-box"><b id="statHelpful">0</b><span>ถูกใจ/ช่วยได้</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🏅 Badges</h3>
+          <div class="badge-grid" id="badgeGrid"></div>
+        </div>
+        <div class="card">
+          <h3>📆 สรุปงานเดือนนี้</h3>
+          <div id="monthSummary"></div>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -286,6 +333,7 @@
     $all('.view').forEach(v=>v.classList.remove('active'));
     $('#view-'+name).classList.add('active');
     if(name==='history') loadHistory(true);
+    if(name==='profile') loadProfile();
   }
   document.addEventListener('click', e=>{
     const nav = e.target.closest('[data-nav]');
@@ -415,7 +463,6 @@
     }
   });
 
-  // ปุ่มไมค์เล็กในหน้าค้นหา
   $('#searchMicBtn').addEventListener('click', ()=>{
     if(!state.isSearchListening){
       const ok = SpeechService.start(
@@ -467,7 +514,6 @@
     const words = text.split(/\s+/).map(w=>w.trim()).filter(w=>w.length>=3 && !stop.includes(w));
     return [...new Set(words)].slice(0,6);
   }
-  // แยกสาเหตุ/วิธีแก้/ผลลัพธ์แบบง่ายจากประโยคที่พูดถึงการแก้ปัญหา
   function extractProblemParts(text){
     const causeM = text.match(/(?:เพราะ|เนื่องจาก|สาเหตุ(?:คือ|มาจาก)?)\s*([^.。]+)/);
     const solM = text.match(/(?:ลองเปลี่ยน|เปลี่ยนเป็น|แก้โดย|วิธีแก้คือ|ลองแก้)\s*([^.。]+)/);
@@ -809,9 +855,6 @@
     openEvidenceFlow({ workLogId: w.workLogId, categoryLabel: meta.icon+' '+meta.name, allowSkip:false, returnView:'detail' });
   });
 
-  /* ============================================================
-   * SEARCH KNOWLEDGE — ค้นหาความรู้จากปัญหาที่เคยมีคนบันทึกไว้
-   * ============================================================*/
   async function doSearch(){
     const query = $('#searchInput').value.trim();
     if(!query){ toast('กรุณาพิมพ์หรือพูดคำค้นก่อน', true); return; }
@@ -861,7 +904,7 @@
           const res = await Api.post('submitFeedback', { knowledgeId, helpful });
           if(res.success){
             toast(helpful ? '👍 ขอบคุณสำหรับความคิดเห็น! เจ้าของความรู้จะได้ EXP' : 'ขอบคุณสำหรับความคิดเห็น');
-            doSearch(); // โหลดผลลัพธ์ใหม่เพื่ออัปเดตตัวเลข
+            doSearch();
           } else { throw new Error(res.error); }
         }catch(err){
           toast('⚠️ ส่งความคิดเห็นไม่สำเร็จ: ' + err.message, true);
@@ -869,6 +912,66 @@
         }
       });
     });
+  }
+
+  /* ============================================================
+   * PROFILE — โหลดข้อมูล EXP, Level, สถิติ, Badge ของผู้ใช้
+   * ============================================================*/
+  async function loadProfile(){
+    $('#profileSpinner').classList.remove('hidden');
+    $('#profileContent').classList.add('hidden');
+    try{
+      const email = state.user ? state.user.email : '';
+      const res = await Api.get('getProfile', { email });
+      if(!res.success) throw new Error(res.error || 'โหลดโปรไฟล์ไม่สำเร็จ');
+      renderProfile(res);
+    }catch(err){
+      toast('❌ โหลดโปรไฟล์ไม่สำเร็จ: ' + err.message, true);
+    } finally {
+      $('#profileSpinner').classList.add('hidden');
+      $('#profileContent').classList.remove('hidden');
+    }
+  }
+  function renderProfile(data){
+    $('#profLevelName').textContent = 'Level ' + data.level + ' — ' + data.levelName;
+    $('#profExp').textContent = data.exp + ' EXP';
+
+    let progress = 100;
+    if(data.nextLevelMinExp !== null){
+      const range = data.nextLevelMinExp - data.currentLevelMinExp;
+      const gained = data.exp - data.currentLevelMinExp;
+      progress = range > 0 ? Math.min(100, Math.round((gained / range) * 100)) : 100;
+    }
+    $('#profBar').style.width = progress + '%';
+    $('#profNext').textContent = data.nextLevelMinExp !== null
+      ? ('อีก ' + (data.nextLevelMinExp - data.exp) + ' EXP ถึง Lv.' + (data.level+1) + ' (' + data.nextLevelName + ')')
+      : 'ระดับสูงสุดแล้ว! 🎉';
+
+    $('#statLogs').textContent = data.stats.logs;
+    $('#statProblems').textContent = data.stats.problems;
+    $('#statKnowledge').textContent = data.stats.knowledge;
+    $('#statHelpful').textContent = data.stats.helpful;
+
+    $('#badgeGrid').innerHTML = data.badges.map(b=>
+      `<div class="badge ${b.earned?'earned':''}"><span class="bic">${b.icon}</span>${escapeHtml(b.name)}</div>`
+    ).join('');
+
+    const newBadges = data.badges.filter(b=>b.isNew);
+    newBadges.forEach((b, i)=>{
+      setTimeout(()=> toast('🏆 ยินดีด้วย! ปลดล็อค Badge ใหม่: ' + b.name), 500 + i*1000);
+    });
+
+    const catNames = { photography:'📸 งานถ่ายภาพ', video:'🎥 งานวิดีโอ', meeting:'🗣️ งานประชุม', event:'🎪 งานจัดกิจกรรม', problem:'🛠️ ปัญหา/แก้ปัญหา', document:'📄 งานเอกสาร', other:'📌 งานอื่นๆ' };
+    const ms = data.monthSummary;
+    if(ms.total === 0){
+      $('#monthSummary').innerHTML = '<p class="note">ยังไม่มีข้อมูลในเดือนนี้</p>';
+    } else {
+      let html = `<p style="font-size:13px;margin-top:0;">คุณบันทึกงานทั้งหมด <b>${ms.total}</b> รายการในเดือนนี้</p>`;
+      Object.keys(ms.byCategory).forEach(cat=>{
+        html += `<div class="cat-row"><span>${catNames[cat]||cat}</span><b>${ms.byCategory[cat]}</b></div>`;
+      });
+      $('#monthSummary').innerHTML = html;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{ updateNetBadge(); resetCaptureUI(); });
