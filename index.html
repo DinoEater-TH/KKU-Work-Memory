@@ -5,92 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>KKU WORK MEMORY</title>
 <style>
-  :root{
-    --bg:#f2f4fb; --card:#ffffff; --primary:#4f46e5; --primary2:#6366f1;
-    --dark:#1f2333; --muted:#6b7280; --success:#10b981; --danger:#ef4444; --accent:#f59e0b;
-    --radius:18px; --shadow:0 6px 18px rgba(31,35,51,.08);
-  }
+  :root{--bg:#f2f4fb;--card:#fff;--primary:#4f46e5;--primary2:#6366f1;--dark:#1f2333;--muted:#6b7280;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--radius:18px;--shadow:0 6px 18px rgba(31,35,51,.08);}
   *{box-sizing:border-box;}
-  body{margin:0;font-family:system-ui,-apple-system,"Tahoma",sans-serif;background:var(--bg);color:var(--dark);}
-  #app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;padding-bottom:20px;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--dark);}
+  #app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:78px;position:relative;}
   header.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;position:sticky;top:0;z-index:20;}
   header.topbar h1{font-size:17px;margin:0;}
   header.topbar span.tag{font-size:11px;opacity:.85;display:block;}
-  .netbadge{font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.2);}
-  .netbadge.offline{background:var(--danger);}
-  main{flex:1;padding:16px;}
+  .iconbtn{background:rgba(255,255,255,.18);border:none;color:#fff;width:36px;height:36px;border-radius:10px;font-size:16px;cursor:pointer;}
+  .xppill{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;border:none;color:#fff;}
+  main{padding:16px;}
   .view{display:none;animation:fadeIn .25s ease;}
   .view.active{display:block;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
-  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
-  .card h3{margin:0 0 8px;font-size:15px;}
-  .field{margin-bottom:12px;}
-  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
-  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #e2e5ec;border-radius:12px;font-size:14px;background:#fbfbfe;font-family:inherit;}
-  .field textarea{resize:vertical;min-height:70px;}
-
-  .btn{width:100%;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
-  .btn-primary{background:var(--primary);color:#fff;}
-  .btn-secondary{background:#eef0fb;color:var(--primary);}
-  .btn-ghost{background:transparent;color:var(--muted);border:1px solid #e2e5ec;}
-  .btn:disabled{opacity:.55;cursor:not-allowed;}
-  .btn-row{display:flex;gap:8px;}
-  .btn-row .btn{flex:1;}
-
   .home-title{text-align:center;margin:6px 0 22px;font-size:15px;color:var(--muted);}
   .mic-wrap{display:flex;flex-direction:column;align-items:center;margin:20px 0 26px;}
   #micBtn{width:130px;height:130px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-size:46px;box-shadow:0 10px 30px rgba(79,70,229,.4);cursor:pointer;}
   #micBtn:active{transform:scale(.95);}
   .mic-caption{margin-top:12px;color:var(--muted);font-size:13px;}
-
   .quickgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
   .quickbtn{background:var(--card);border:none;border-radius:var(--radius);padding:16px 8px;box-shadow:var(--shadow);font-size:14px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--dark);}
   .quickbtn .ic{font-size:26px;}
-
-  .backbtn{background:none;border:none;color:var(--primary);font-size:14px;cursor:pointer;padding:0;font-weight:600;margin-bottom:10px;display:inline-block;}
-
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
+  .card h3{margin:0 0 8px;font-size:15px;}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+  .backbtn{background:none;border:none;color:var(--primary);font-size:14px;cursor:pointer;padding:0;font-weight:600;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #e2e5ec;border-radius:12px;font-size:14px;background:#fbfbfe;font-family:inherit;}
+  .field textarea{resize:vertical;min-height:70px;}
+  .btn{width:100%;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-secondary{background:#eef0fb;color:var(--primary);}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid #e2e5ec;}
+  .btn-row{display:flex;gap:8px;}
+  .btn-row .btn{flex:1;}
   .listen-status{text-align:center;font-size:14px;color:var(--primary);font-weight:700;margin-bottom:14px;}
-  .wave{display:flex;justify-content:center;align-items:center;gap:6px;height:60px;margin-bottom:10px;}
+  .wave{display:flex;justify-content:center;align-items:center;gap:6px;height:60px;margin-bottom:18px;}
   .wave span{width:6px;height:14px;background:var(--primary);border-radius:4px;}
-  .wave.on span{animation:bar 0.9s ease-in-out infinite;}
+  .wave.on span{animation:bar .9s ease-in-out infinite;}
   .wave span:nth-child(2){animation-delay:.1s;} .wave span:nth-child(3){animation-delay:.2s;}
   .wave span:nth-child(4){animation-delay:.3s;} .wave span:nth-child(5){animation-delay:.4s;}
   @keyframes bar{0%,100%{height:14px;}50%{height:48px;}}
-
+  .evidence-thumb{width:64px;height:64px;object-fit:cover;border-radius:10px;margin-right:6px;border:1px solid #e2e5ec;}
+  .evidence-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+  .evidence-item{position:relative;}
+  .evidence-item .rm{position:absolute;top:-6px;right:-2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;}
+  .chip{display:inline-block;background:#eef0fb;color:var(--primary);font-size:12px;padding:4px 10px;border-radius:999px;margin:2px 4px 2px 0;position:relative;padding-right:22px;}
+  .filterbar{display:flex;gap:8px;margin-bottom:12px;}
+  .filterbar select,.filterbar input{flex:1;padding:9px 10px;border-radius:10px;border:1px solid #e2e5ec;font-size:13px;}
   .log-card{border-left:4px solid var(--primary);}
   .log-card .meta{font-size:12px;color:var(--muted);}
   .log-card .exp{color:var(--success);font-weight:700;font-size:12px;}
-
-  .spinner{width:26px;height:26px;border:3px solid #e2e5ec;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:20px auto;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;z-index:100;opacity:0;transition:opacity .25s,bottom .25s;box-shadow:var(--shadow);max-width:90%;text-align:center;}
-  .toast.show{opacity:1;bottom:34px;}
-  .toast.error{background:var(--danger);}
-
-  .note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;}
-  .hidden{display:none!important;}
-  .pending-banner{background:#fff7ea;border:1px solid #f5d99b;border-radius:12px;padding:10px 14px;font-size:12px;color:#8a6414;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-  .pending-banner button{border:none;background:#f59e0b;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;}
-
-  .chip{display:inline-block;background:#eef0fb;color:var(--primary);font-size:12px;padding:4px 10px;border-radius:999px;margin:2px 4px 2px 0;text-decoration:none;}
-  .evidence-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
-  .evidence-item{position:relative;}
-  .evidence-thumb{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid #e2e5ec;display:block;}
-  .evidence-item .rm{position:absolute;top:-6px;right:-2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:18px;cursor:pointer;}
-  .evidence-gallery{display:flex;flex-wrap:wrap;gap:8px;}
-  .evidence-thumb-lg{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid #e2e5ec;}
-
-  fieldset{border:1px dashed #d8dbe8;border-radius:12px;margin-top:6px;padding:10px;}
-  legend{font-size:12px;color:var(--primary);font-weight:700;padding:0 4px;}
-  .relevance{font-size:11px;background:#fff7ea;color:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700;}
-  .kb-actions{display:flex;gap:8px;margin-top:10px;}
-  .kb-actions button{flex:1;padding:8px;border-radius:10px;border:1px solid #e2e5ec;background:#fbfbfe;font-size:13px;cursor:pointer;}
-  .kb-actions button:disabled{opacity:.5;cursor:not-allowed;}
-  .quicklink{display:block;text-align:center;font-size:12px;color:var(--muted);margin-top:10px;text-decoration:underline;background:none;border:none;cursor:pointer;width:100%;}
-
-  /* ===== เพิ่มใหม่: Profile ===== */
   .progress-outer{background:#e9ebf5;border-radius:999px;height:10px;overflow:hidden;margin:6px 0 4px;}
   .progress-inner{background:linear-gradient(90deg,var(--primary),var(--accent));height:100%;border-radius:999px;transition:width .4s;}
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -101,54 +67,61 @@
   .badge{text-align:center;font-size:11px;color:var(--muted);opacity:.35;}
   .badge.earned{opacity:1;color:var(--dark);font-weight:600;}
   .badge .bic{font-size:26px;display:block;}
-  .cat-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0f1f7;}
-  .cat-row:last-child{border-bottom:none;}
+  .bottomnav{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:#fff;border-top:1px solid #e6e8f0;display:flex;z-index:30;}
+  .navbtn{flex:1;background:none;border:none;padding:10px 4px;font-size:11px;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .navbtn .ic{font-size:20px;}
+  .navbtn.active{color:var(--primary);font-weight:700;}
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;z-index:100;opacity:0;transition:opacity .25s;box-shadow:var(--shadow);white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;}
+  .hidden{display:none!important;}
+  fieldset{border:1px dashed #d8dbe8;border-radius:12px;margin-top:6px;padding:10px;}
+  legend{font-size:12px;color:var(--primary);font-weight:700;padding:0 4px;}
+  #view-login{padding-top:60px;}
+  #view-login .card{text-align:center;}
 </style>
 </head>
 <body>
 <div id="app">
 
   <header class="topbar">
-    <div>
-      <h1>🧠 KKU WORK MEMORY</h1>
-      <span class="tag">พูดไว้วันนี้…ไม่ต้องจำเองในวันหน้า</span>
+    <div><h1>🧠 KKU WORK MEMORY</h1><span class="tag">พูดไว้วันนี้…ไม่ต้องจำเองในวันหน้า</span></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="xppill" id="xpPillBtn" type="button">Lv.1 ⭐0</button>
     </div>
-    <span class="netbadge" id="netBadge">🟢 ออนไลน์</span>
   </header>
 
   <main>
 
+    <!-- LOGIN -->
     <section class="view active" id="view-login">
-      <div class="card" style="margin-top:30px;">
-        <h3>👋 สวัสดีครับ กรุณาระบุตัวตนก่อนใช้งาน</h3>
-        <div class="field"><label>ชื่อ-นามสกุล</label><input type="text" id="loginName" placeholder="เช่น สมชาย ใจดี"></div>
-        <div class="field"><label>อีเมล (ใช้อ้างอิงในระบบ)</label><input type="email" id="loginEmail" placeholder="เช่น somchai@kku.ac.th"></div>
-        <button class="btn btn-primary" id="loginBtn" type="button">เข้าใช้งาน</button>
-        <p class="note">ระบบนี้เป็น Prototype ยังไม่มีรหัสผ่าน ใช้อีเมลเพื่ออ้างอิงเจ้าของข้อมูลเท่านั้น</p>
+      <div class="card">
+        <h3>เข้าสู่ระบบ</h3>
+        <div class="field"><label>อีเมล (มข.)</label><input type="email" id="loginEmail" placeholder="somchai@kku.ac.th"></div>
+        <button class="btn btn-primary" id="loginBtn" type="button">เข้าสู่ระบบ</button>
       </div>
     </section>
 
+    <!-- HOME -->
     <section class="view" id="view-home">
       <p class="home-title">วันนี้คุณทำอะไร?</p>
       <div class="mic-wrap">
         <button id="micBtn" type="button">🎙️</button>
-        <div class="mic-caption">กดเพื่อพูด/พิมพ์บันทึกงาน</div>
+        <div class="mic-caption">กดเพื่อพูดบันทึกงาน</div>
       </div>
       <div class="quickgrid">
         <button class="quickbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
-        <button class="quickbtn" data-nav="search"><span class="ic">🔎</span>ค้นหาความรู้</button>
+        <button class="quickbtn" data-nav="profile"><span class="ic">👤</span>โปรไฟล์</button>
       </div>
-      <button class="btn btn-secondary" data-nav="profile" type="button" style="margin-top:12px;">👤 โปรไฟล์ของฉัน</button>
-      <button class="quicklink" id="pingBtn" type="button">🔌 ทดสอบการเชื่อมต่อ</button>
-      <p class="note">ข้อมูลที่บันทึกจากหน้านี้จะถูกส่งไปเก็บจริงที่ Google Sheets ของคุณ</p>
     </section>
 
+    <!-- CAPTURE -->
     <section class="view" id="view-capture">
       <button class="backbtn" data-nav="home">‹ กลับ</button>
       <div class="card">
         <div class="listen-status" id="listenStatus">แตะปุ่มเพื่อเริ่มพูด</div>
         <div class="wave" id="waveBox"><span></span><span></span><span></span><span></span><span></span></div>
-        <textarea id="transcriptBox" placeholder="พิมพ์หรือพูดสิ่งที่คุณทำวันนี้ เช่น 'เครื่องฉายไม่มีภาพ ลองเปลี่ยน Input เป็น HDMI แล้วใช้ได้'"></textarea>
+        <textarea id="transcriptBox" placeholder="พิมพ์หรือพูดสิ่งที่คุณทำวันนี้"></textarea>
         <div class="btn-row" style="margin-top:10px;">
           <button class="btn btn-secondary" id="toggleListenBtn" type="button">🎙️ เริ่มพูด</button>
           <button class="btn btn-primary" id="analyzeBtn" type="button">🧠 วิเคราะห์</button>
@@ -156,44 +129,33 @@
       </div>
     </section>
 
+    <!-- PREVIEW -->
     <section class="view" id="view-preview">
       <button class="backbtn" data-nav="capture">‹ แก้ไขข้อความ</button>
       <div class="card">
-        <h3>✅ ตรวจสอบข้อมูลก่อนบันทึก</h3>
-        <div class="field"><label>ประเภทงาน</label>
-          <select id="pv-category">
-            <option value="photography">📸 งานถ่ายภาพ</option>
-            <option value="video">🎥 งานวิดีโอ</option>
-            <option value="meeting">🗣️ งานประชุม</option>
-            <option value="event">🎪 งานจัดกิจกรรม</option>
-            <option value="problem">🛠️ ปัญหา/แก้ปัญหา</option>
-            <option value="document">📄 งานเอกสาร</option>
-            <option value="other">📌 งานอื่นๆ</option>
-          </select>
-        </div>
+        <h3>✅ ตรวจสอบก่อนบันทึก</h3>
+        <div class="field"><label>ประเภทงาน</label><select id="pv-category"></select></div>
         <div class="field"><label>วันที่</label><input type="date" id="pv-date"></div>
         <div class="field"><label>เวลา</label><input type="text" id="pv-time"></div>
         <div class="field"><label>สถานที่</label><input type="text" id="pv-location"></div>
         <div class="field"><label>ผู้เกี่ยวข้อง</label><input type="text" id="pv-people"></div>
         <div class="field"><label>รายละเอียด</label><textarea id="pv-detail"></textarea></div>
-        <div class="field"><label>คำสำคัญ (Keyword)</label><input type="text" id="pv-keywords"></div>
-
+        <div class="field"><label>คำสำคัญ</label><input type="text" id="pv-keywords"></div>
         <fieldset id="pv-problem-fs">
-          <legend>🛠 บันทึกวิธีแก้ปัญหา (จะกลายเป็น Knowledge ให้คนอื่นค้นหาได้)</legend>
+          <legend>🛠 บันทึกการแก้ปัญหา</legend>
           <div class="field"><label>สาเหตุที่พบ</label><textarea id="pv-cause"></textarea></div>
           <div class="field"><label>วิธีแก้</label><textarea id="pv-solution"></textarea></div>
           <div class="field"><label>ผลลัพธ์</label><textarea id="pv-result"></textarea></div>
         </fieldset>
       </div>
-      <button class="btn btn-primary" id="confirmSaveBtn" type="button">✅ ยืนยัน & บันทึกจริง</button>
+      <button class="btn btn-primary" id="confirmSaveBtn" type="button">✅ ยืนยัน & บันทึก</button>
     </section>
 
+    <!-- EVIDENCE -->
     <section class="view" id="view-evidence">
-      <button class="backbtn" id="evidenceBackBtn" type="button">‹ กลับ</button>
       <div class="card">
-        <h3 id="evidenceContextTitle">📷 เพิ่มหลักฐาน</h3>
-        <p class="note" id="evidenceContextSub" style="margin-top:-4px;"></p>
-        <div class="evidence-list" id="evidenceStagingList"></div>
+        <h3>📷 ต้องการเพิ่มหลักฐานหรือไม่?</h3>
+        <div class="evidence-list" id="evidenceList"></div>
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
         <input type="file" id="galleryInput" accept="image/*" class="hidden">
         <div class="btn-row">
@@ -201,783 +163,317 @@
           <button class="btn btn-secondary" id="pickPhotoBtn" type="button">📁 เลือกรูป</button>
         </div>
         <button class="btn btn-ghost" id="addLinkBtn" type="button" style="margin-top:8px;">🔗 เพิ่มลิงก์ผลงาน</button>
-        <div class="spinner hidden" id="evidenceUploadSpinner"></div>
-        <button class="btn btn-primary" id="saveEvidenceBtn" type="button" style="margin-top:14px;">✅ บันทึกหลักฐาน</button>
-        <button class="btn btn-ghost hidden" id="skipEvidenceBtn" type="button">⏭ ข้ามไปก่อน</button>
+        <button class="btn btn-primary" id="finishEvidenceBtn" type="button" style="margin-top:14px;">เสร็จสิ้น</button>
+        <button class="btn btn-ghost" id="skipEvidenceBtn" type="button">⏭ ข้ามไปก่อน</button>
       </div>
     </section>
 
+    <!-- HISTORY -->
     <section class="view" id="view-history">
-      <button class="backbtn" data-nav="home">‹ กลับ</button>
       <h3 style="margin-top:0;">📚 ประวัติของฉัน</h3>
-      <p class="note" style="margin-top:-6px;margin-bottom:10px;">💡 แตะที่รายการเพื่อดูรายละเอียด/เพิ่มหลักฐานย้อนหลัง</p>
-      <div id="pendingBannerWrap"></div>
-      <div id="historyList"></div>
-      <div class="spinner hidden" id="historySpinner"></div>
-      <button class="btn btn-ghost hidden" id="loadMoreBtn" type="button">โหลดเพิ่มเติม</button>
-    </section>
-
-    <section class="view" id="view-detail">
-      <button class="backbtn" data-nav="history">‹ กลับไปประวัติ</button>
-      <div class="card" id="detailCard"></div>
-      <div class="card">
-        <h3>📎 หลักฐานการทำงาน</h3>
-        <div class="evidence-gallery" id="detailEvidenceList"></div>
-        <div class="spinner hidden" id="detailEvidenceSpinner"></div>
-        <button class="btn btn-secondary" id="addEvidenceFromDetailBtn" type="button" style="margin-top:12px;">➕ เพิ่มหลักฐาน</button>
+      <div class="filterbar">
+        <select id="histCategoryFilter"><option value="">ทุกประเภท</option></select>
+        <input type="text" id="histKeywordFilter" placeholder="ค้นหา...">
       </div>
+      <div id="historyList"><p class="note">กำลังโหลด...</p></div>
     </section>
 
-    <section class="view" id="view-search">
-      <button class="backbtn" data-nav="home">‹ กลับ</button>
-      <h3 style="margin-top:0;">🔎 ฉันกำลังเจอปัญหา...</h3>
-      <p class="note" style="margin-top:-6px;margin-bottom:10px;">พิมพ์หรือพูดปัญหาที่พบ ระบบจะค้นจากความรู้ที่เคยมีคนบันทึกไว้</p>
-      <div class="field">
-        <div class="btn-row">
-          <input type="text" id="searchInput" placeholder="เช่น เครื่องฉายไม่มีภาพ" style="flex:2;padding:10px 12px;border:1px solid #e2e5ec;border-radius:12px;font-size:14px;">
-          <button class="btn btn-secondary" id="searchMicBtn" type="button" style="flex:0 0 52px;padding:10px;">🎙️</button>
-        </div>
-      </div>
-      <button class="btn btn-primary" id="searchBtn" type="button">ค้นหาความรู้</button>
-      <div class="spinner hidden" id="searchSpinner"></div>
-      <div id="searchResults" style="margin-top:14px;"></div>
-    </section>
-
-    <!-- ===== ใหม่: PROFILE VIEW ===== -->
+    <!-- PROFILE -->
     <section class="view" id="view-profile">
-      <button class="backbtn" data-nav="home">‹ กลับ</button>
       <h3 style="margin-top:0;">👤 Work Profile</h3>
-      <div class="spinner" id="profileSpinner"></div>
-      <div id="profileContent" class="hidden">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;">
-            <b id="profLevelName" style="font-size:16px;">Level 1 — ชาวบ้าน</b>
-            <span id="profExp" style="color:var(--muted);font-size:13px;">0 EXP</span>
-          </div>
-          <div class="progress-outer"><div class="progress-inner" id="profBar" style="width:0%"></div></div>
-          <div style="font-size:11px;color:var(--muted);" id="profNext"></div>
-        </div>
-        <div class="card">
-          <h3>📊 สถิติ</h3>
-          <div class="stat-grid">
-            <div class="stat-box"><b id="statLogs">0</b><span>บันทึกงาน</span></div>
-            <div class="stat-box"><b id="statProblems">0</b><span>แก้ปัญหา</span></div>
-            <div class="stat-box"><b id="statKnowledge">0</b><span>Knowledge</span></div>
-            <div class="stat-box"><b id="statHelpful">0</b><span>ถูกใจ/ช่วยได้</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <h3>🏅 Badges</h3>
-          <div class="badge-grid" id="badgeGrid"></div>
-        </div>
-        <div class="card">
-          <h3>📆 สรุปงานเดือนนี้</h3>
-          <div id="monthSummary"></div>
+      <div class="card">
+        <div class="row"><b id="profLevelName">Level 1</b><span id="profExp">0 EXP</span></div>
+        <div class="progress-outer"><div class="progress-inner" id="profBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--muted);" id="profNext"></div>
+      </div>
+      <div class="card">
+        <h3>📊 สถิติ</h3>
+        <div class="stat-grid">
+          <div class="stat-box"><b id="statLogs">0</b><span>บันทึกงาน</span></div>
+          <div class="stat-box"><b id="statProblems">0</b><span>แก้ปัญหา</span></div>
+          <div class="stat-box"><b id="statKnowledge">0</b><span>Knowledge</span></div>
+          <div class="stat-box"><b id="statHelpful">0</b><span>ช่วยได้</span></div>
         </div>
       </div>
+      <div class="card"><h3>🏅 Badges</h3><div class="badge-grid" id="badgeGrid"></div></div>
+      <div class="card"><h3>📆 สรุปเดือนนี้</h3><div id="monthSummary"></div></div>
     </section>
 
   </main>
+
+  <nav class="bottomnav hidden" id="bottomNav">
+    <button class="navbtn active" data-nav="home"><span class="ic">🏠</span>หน้าแรก</button>
+    <button class="navbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
+    <button class="navbtn" data-nav="profile"><span class="ic">👤</span>โปรไฟล์</button>
+  </nav>
 
   <div class="toast" id="toast"></div>
 </div>
 
 <script>
 (function(){
-  'use strict';
+'use strict';
 
-  const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbxiD92TmykqPsf9UbNH3I4JCiur2phMJXxljeUJ0GslMKPlFhzLv_tQQzXKVfM6Djs/exec',
-    HISTORY_PAGE_SIZE: 15,
-    IMAGE_MAX_SIZE: 1280
-  };
+/* ตั้งค่า API URL ของ Google Apps Script ที่ Deploy แล้ว */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbxiD92TmykqPsf9UbNH3I4JCiur2phMJXxljeUJ0GslMKPlFhzLv_tQQzXKVfM6Djs/exec',
+  CATEGORIES: [
+    {id:'photography', name:'งานถ่ายภาพ', icon:'📸', evidence:true, kws:['ถ่ายภาพ','ถ่ายรูป','ภาพถ่าย','กล้อง']},
+    {id:'video', name:'งานวิดีโอ', icon:'🎥', evidence:true, kws:['ถ่ายวิดีโอ','วิดีโอ']},
+    {id:'meeting', name:'งานประชุม', icon:'🗣️', evidence:true, kws:['ประชุม']},
+    {id:'event', name:'งานจัดกิจกรรม', icon:'🎪', evidence:true, kws:['กิจกรรม','จัดงาน']},
+    {id:'problem', name:'ปัญหา/แก้ปัญหา', icon:'🛠️', evidence:false, kws:['ปัญหา','เสีย','ไม่ได้','พัง','ไม่ขึ้น','ไม่มีภาพ']},
+    {id:'document', name:'งานเอกสาร', icon:'📄', evidence:false, kws:['เอกสาร','รายงาน']},
+    {id:'other', name:'งานอื่นๆ', icon:'📌', evidence:false, kws:[]}
+  ]
+};
 
-  const CATEGORY_META = {
-    photography:{icon:'📸', name:'งานถ่ายภาพ', requiresEvidence:true},
-    video:{icon:'🎥', name:'งานวิดีโอ', requiresEvidence:true},
-    meeting:{icon:'🗣️', name:'งานประชุม', requiresEvidence:true},
-    event:{icon:'🎪', name:'งานจัดกิจกรรม', requiresEvidence:true},
-    problem:{icon:'🛠️', name:'ปัญหา/แก้ปัญหา', requiresEvidence:false},
-    document:{icon:'📄', name:'งานเอกสาร', requiresEvidence:false},
-    other:{icon:'📌', name:'งานอื่นๆ', requiresEvidence:false}
-  };
-  function categoryMeta(id){ return CATEGORY_META[id] || CATEGORY_META.other; }
+const state = { currentUser:null, currentDraft:null, currentEvidence:[], currentWorkLogId:null, isListening:false };
 
-  const state = {
-    user: null, currentDraft: null, pendingQueue: [],
-    historyOffset: 0, historyItems: [], isListening: false,
-    evidenceStaging: [], evidenceContext: null, detailWorkLog: null,
-    isSearchListening: false
-  };
+const $ = s=>document.querySelector(s);
+const $all = s=>document.querySelectorAll(s);
+let toastTimer=null;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function catInfo(id){ return CONFIG.CATEGORIES.find(c=>c.id===id) || CONFIG.CATEGORIES[CONFIG.CATEGORIES.length-1]; }
+function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function formatDateThai(iso){
+  if(!iso) return 'ไม่พบข้อมูล';
+  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const d=new Date(iso+'T00:00:00'); if(isNaN(d)) return iso;
+  return d.getDate()+' '+months[d.getMonth()]+' '+(d.getFullYear()+543);
+}
 
-  const $ = sel => document.querySelector(sel);
-  const $all = sel => document.querySelectorAll(sel);
+/* ===== เรียก Backend ===== */
+async function apiGet(action, params){
+  const qs = new URLSearchParams({action, ...params}).toString();
+  const res = await fetch(CONFIG.API_URL+'?'+qs);
+  return res.json();
+}
+async function apiPost(action, params){
+  const res = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({action, ...params}) });
+  return res.json();
+}
 
-  let toastTimer = null;
-  function toast(msg, isError){
-    const t = $('#toast');
-    t.textContent = msg;
-    t.classList.toggle('error', !!isError);
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=> t.classList.remove('show'), 3200);
-  }
-  function escapeHtml(str){
-    const div = document.createElement('div');
-    div.textContent = str || '';
-    return div.innerHTML;
-  }
-  function safeHref(url){ return /^https?:\/\//i.test(url||'') ? url : '#'; }
+/* ===== Login ===== */
+$('#loginBtn').addEventListener('click', ()=>{
+  const email = $('#loginEmail').value.trim();
+  if(!email || !email.includes('@')){ toast('กรุณากรอกอีเมลให้ถูกต้อง'); return; }
+  state.currentUser = { email };
+  localStorage.setItem('kku_user_email', email);
+  $('#bottomNav').classList.remove('hidden');
+  showView('home');
+});
 
-  function showView(name){
-    $all('.view').forEach(v=>v.classList.remove('active'));
-    $('#view-'+name).classList.add('active');
-    if(name==='history') loadHistory(true);
-    if(name==='profile') loadProfile();
-  }
-  document.addEventListener('click', e=>{
-    const nav = e.target.closest('[data-nav]');
-    if(nav) showView(nav.dataset.nav);
-  });
+/* ===== Navigation ===== */
+function showView(name){
+  $all('.view').forEach(v=>v.classList.remove('active'));
+  $('#view-'+name).classList.add('active');
+  $all('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.nav===name));
+  if(name==='history') loadHistory();
+  if(name==='profile') loadProfile();
+  if(name==='home') resetCaptureUI();
+}
+document.addEventListener('click', e=>{
+  const nav = e.target.closest('[data-nav]');
+  if(nav) showView(nav.dataset.nav);
+});
+$('#xpPillBtn').addEventListener('click', ()=> showView('profile'));
 
-  function updateNetBadge(){
-    const badge = $('#netBadge');
-    if(navigator.onLine){
-      badge.textContent = '🟢 ออนไลน์'; badge.classList.remove('offline');
-      flushPendingQueue();
-    } else {
-      badge.textContent = '🔴 ออฟไลน์'; badge.classList.add('offline');
-    }
-  }
-  window.addEventListener('online', updateNetBadge);
-  window.addEventListener('offline', updateNetBadge);
-
-  function genClientRequestId(){
-    if(window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
-    return 'cr-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-  }
-  function todayISO(){
-    const d=new Date();
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  }
-  function formatDateThai(iso){
-    if(!iso) return 'ไม่พบข้อมูล';
-    const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-    const d = new Date(iso+'T00:00:00');
-    if(isNaN(d)) return iso;
-    return d.getDate()+' '+months[d.getMonth()]+' '+(d.getFullYear()+543);
-  }
-
-  const Api = {
-    async post(action, data){
-      const res = await fetch(CONFIG.API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, data })
-      });
-      if(!res.ok) throw new Error('เซิร์ฟเวอร์ตอบกลับผิดพลาด (HTTP ' + res.status + ')');
-      return res.json();
-    },
-    async get(action, params){
-      const q = new URLSearchParams({ action, ...params }).toString();
-      const res = await fetch(CONFIG.API_URL + '?' + q, { method: 'GET' });
-      if(!res.ok) throw new Error('เซิร์ฟเวอร์ตอบกลับผิดพลาด (HTTP ' + res.status + ')');
-      return res.json();
-    }
-  };
-
-  $('#loginBtn').addEventListener('click', ()=>{
-    const name = $('#loginName').value.trim();
-    const email = $('#loginEmail').value.trim();
-    if(!name || !email){ toast('กรุณากรอกชื่อและอีเมลให้ครบ', true); return; }
-    if(!email.includes('@')){ toast('อีเมลไม่ถูกต้อง', true); return; }
-    state.user = { name, email };
-    showView('home');
-  });
-
-  $('#pingBtn').addEventListener('click', async ()=>{
-    toast('กำลังทดสอบการเชื่อมต่อ...');
-    try{
-      const res = await Api.get('ping', {});
-      if(res.success) toast('✅ เชื่อมต่อสำเร็จ: ' + res.message);
-      else toast('⚠️ ' + (res.error || 'ไม่สำเร็จ'), true);
-    }catch(err){ toast('❌ เชื่อมต่อไม่ได้: ' + err.message, true); }
-  });
-
-  const SpeechService = {
-    recognition: null,
-    supported: !!(window.SpeechRecognition || window.webkitSpeechRecognition),
-    _onresult: null, _onend: null,
-    init(){
-      const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!Rec) return;
-      this.recognition = new Rec();
-      this.recognition.lang = 'th-TH';
-      this.recognition.continuous = true;
-      this.recognition.interimResults = true;
-      this.recognition.onresult = (e)=>{
-        let text='';
-        for(let i=0;i<e.results.length;i++){ text += e.results[i][0].transcript; }
-        if(this._onresult) this._onresult(text);
-      };
-      this.recognition.onerror = ()=>{ toast('⚠️ ใช้เสียงไม่ได้ กรุณาพิมพ์ข้อความแทน', true); this.stop(); };
-      this.recognition.onend = ()=>{ if(this._onend) this._onend(); };
-    },
-    start(onResult, onEnd){
-      if(!this.recognition) return false;
-      this._onresult = onResult; this._onend = onEnd;
-      try{ this.recognition.start(); return true; }catch(e){ return false; }
-    },
-    stop(){ if(this.recognition){ try{ this.recognition.stop(); }catch(e){} } }
-  };
-  SpeechService.init();
-
-  function resetCaptureUI(){
-    $('#transcriptBox').value='';
-    $('#listenStatus').textContent = SpeechService.supported ? 'แตะปุ่มเพื่อเริ่มพูด' : 'เบราว์เซอร์นี้ไม่รองรับการพูด กรุณาพิมพ์ข้อความ';
-    $('#waveBox').classList.remove('on');
-    $('#toggleListenBtn').textContent = '🎙️ เริ่มพูด';
-    $('#toggleListenBtn').disabled = !SpeechService.supported;
-    state.isListening = false;
-  }
-  $('#micBtn').addEventListener('click', ()=>{ resetCaptureUI(); showView('capture'); });
-  $('#toggleListenBtn').addEventListener('click', ()=>{
-    if(!state.isListening){
-      const ok = SpeechService.start(
-        (text)=>{ $('#transcriptBox').value = text; },
-        ()=>{
-          if(state.isListening){
-            $('#listenStatus').textContent = 'หยุดฟังแล้ว — ตรวจสอบ/แก้ไขข้อความได้เลย';
-            $('#waveBox').classList.remove('on');
-          }
-        }
-      );
-      if(!ok){ toast('⚠️ ไม่สามารถเข้าถึงไมโครโฟนได้', true); return; }
-      state.isListening = true;
-      $('#listenStatus').textContent = '🎙️ กำลังฟัง...';
-      $('#waveBox').classList.add('on');
-      $('#toggleListenBtn').textContent = '⏹ หยุดพูด';
-    } else {
-      SpeechService.stop(); state.isListening = false;
-      $('#toggleListenBtn').textContent = '🎙️ เริ่มพูด';
-    }
-  });
-
-  $('#searchMicBtn').addEventListener('click', ()=>{
-    if(!state.isSearchListening){
-      const ok = SpeechService.start(
-        (text)=>{ $('#searchInput').value = text; },
-        ()=>{ state.isSearchListening = false; $('#searchMicBtn').textContent='🎙️'; }
-      );
-      if(!ok){ toast('⚠️ ไม่สามารถเข้าถึงไมโครโฟนได้', true); return; }
-      state.isSearchListening = true;
-      $('#searchMicBtn').textContent = '⏹';
-    } else {
-      SpeechService.stop(); state.isSearchListening = false;
-      $('#searchMicBtn').textContent = '🎙️';
-    }
-  });
-
-  const CATEGORY_KEYWORDS = {
-    photography:['ถ่ายภาพ','ถ่ายรูป','ภาพถ่าย','กล้อง'],
-    video:['ถ่ายวิดีโอ','วิดีโอ','วีดีโอ'],
-    meeting:['ประชุม'],
-    event:['กิจกรรม','จัดงาน','อีเวนต์'],
-    problem:['ปัญหา','เสีย','ไม่ได้','พัง','ไม่ขึ้น','ไม่ทำงาน','ไม่มีภาพ']
-  };
-  function detectCategory(text){
-    for(const cat in CATEGORY_KEYWORDS){
-      if(CATEGORY_KEYWORDS[cat].some(k=>text.includes(k))) return cat;
-    }
-    return 'other';
-  }
-  function extractLocation(text){
-    const m = text.match(/ที่\s*([^\s,.]+(?:\s+[^\s,.]+){0,4})/);
-    if(!m) return null;
-    return m[1].split(/ตอน|เวลา|แล้ว|และ|เพื่อ/)[0].trim() || null;
-  }
-  function extractPeople(text){
-    const m = text.match(/กับ\s*([^\s,.]+(?:\s+[^\s,.]+){0,3})/);
-    return m ? m[1].split(/ที่|แล้ว|และ/)[0].trim() : null;
-  }
-  function extractTime(text){
-    let m = text.match(/\d{1,2}[:.]\d{2}/);
-    if(m) return m[0];
-    m = text.match(/(\d{1,2})\s?โมง/);
-    if(m) return m[1]+':00';
-    const words={'เก้าโมงเช้า':'09:00','แปดโมงเช้า':'08:00','สิบโมงเช้า':'10:00','บ่ายโมง':'13:00','สองโมงเย็น':'14:00'};
-    for(const w in words){ if(text.includes(w)) return words[w]; }
-    return null;
-  }
-  function extractKeywords(text){
+/* ===== AI วิเคราะห์แบบง่าย (Rule-based) ===== */
+const AI = {
+  detectCategory(text){ for(const c of CONFIG.CATEGORIES){ if(c.kws.some(k=>text.includes(k))) return c; } return catInfo('other'); },
+  extractLocation(text){ const m=text.match(/ที่\s*([^\s,.]+(?:\s+[^\s,.]+){0,4})/); return m ? m[1].split(/ตอน|เวลา|แล้ว|และ/)[0].trim() : null; },
+  extractPeople(text){ const m=text.match(/กับ\s*([^\s,.]+(?:\s+[^\s,.]+){0,3})/); return m ? m[1].split(/ที่|แล้ว/)[0].trim() : null; },
+  extractTime(text){
+    let m=text.match(/\d{1,2}[:.]\d{2}/); if(m) return m[0];
+    m=text.match(/(\d{1,2})\s?โมง/); if(m) return m[1]+':00';
+    const words={'เก้าโมงเช้า':'09:00','แปดโมงเช้า':'08:00','สิบโมงเช้า':'10:00','บ่ายโมง':'13:00'};
+    for(const w in words){ if(text.includes(w)) return words[w]; } return null;
+  },
+  extractKeywords(text){
     const stop=['และ','ที่','ไป','มา','ได้','ให้','ของ','ใน','เป็น','แล้ว','ตอน','กับ','จาก'];
-    const words = text.split(/\s+/).map(w=>w.trim()).filter(w=>w.length>=3 && !stop.includes(w));
-    return [...new Set(words)].slice(0,6);
-  }
-  function extractProblemParts(text){
-    const causeM = text.match(/(?:เพราะ|เนื่องจาก|สาเหตุ(?:คือ|มาจาก)?)\s*([^.。]+)/);
-    const solM = text.match(/(?:ลองเปลี่ยน|เปลี่ยนเป็น|แก้โดย|วิธีแก้คือ|ลองแก้)\s*([^.。]+)/);
-    const resM = text.match(/(?:สุดท้าย|ทำให้|จึง|ก็ใช้ได้|กลับมาใช้งานได้)\s*([^.。]*)/);
+    return [...new Set(text.split(/\s+/).filter(w=>w.length>=3 && !stop.includes(w)))].slice(0,6);
+  },
+  extractProblem(text){
+    const c=text.match(/(?:เพราะ|เนื่องจาก|สาเหตุ(?:คือ|มาจาก)?)\s*([^.。]+)/);
+    const s=text.match(/(?:ลองเปลี่ยน|เปลี่ยนเป็น|แก้โดย|วิธีแก้คือ)\s*([^.。]+)/);
+    const r=text.match(/(?:สุดท้าย|ทำให้|จึง|กลับมาใช้งานได้)\s*([^.。]*)/);
+    return { cause:c?c[1].trim():'ไม่พบข้อมูล', solution:s?s[1].trim():'ไม่พบข้อมูล', result:r?(r[1].trim()||'ไม่พบข้อมูล'):'ไม่พบข้อมูล' };
+  },
+  analyze(text){
+    text=(text||'').trim(); if(!text) return null;
+    const cat=this.detectCategory(text);
     return {
-      cause: causeM ? causeM[1].trim() : '',
-      solution: solM ? solM[1].trim() : '',
-      result: resM ? (resM[1].trim()||'') : ''
+      category:cat.id, date:todayISO(), time:this.extractTime(text)||'ไม่พบข้อมูล',
+      location:this.extractLocation(text)||'ไม่พบข้อมูล', people:this.extractPeople(text)||'ไม่พบข้อมูล',
+      detail:text, keywords:this.extractKeywords(text), problem: cat.id==='problem'? this.extractProblem(text):null
     };
   }
-  function analyzeText(text){
-    const category = detectCategory(text);
-    const result = {
-      category, date: todayISO(),
-      time: extractTime(text) || 'ไม่พบข้อมูล',
-      location: extractLocation(text) || 'ไม่พบข้อมูล',
-      people: extractPeople(text) || 'ไม่พบข้อมูล',
-      detail: text, keywords: extractKeywords(text)
-    };
-    if(category === 'problem'){
-      result.problem = extractProblemParts(text);
-    }
-    return result;
-  }
+};
 
-  $('#analyzeBtn').addEventListener('click', ()=>{
-    const text = $('#transcriptBox').value.trim();
-    if(!text){ toast('กรุณาพูดหรือพิมพ์ข้อความก่อน', true); return; }
-    if(state.isListening){ SpeechService.stop(); state.isListening=false; }
-    const analyzed = analyzeText(text);
-    state.currentDraft = analyzed;
-    fillPreview(analyzed);
-    showView('preview');
-  });
-  function fillPreview(d){
-    $('#pv-category').value = d.category;
-    $('#pv-date').value = d.date;
-    $('#pv-time').value = d.time;
-    $('#pv-location').value = d.location;
-    $('#pv-people').value = d.people;
-    $('#pv-detail').value = d.detail;
-    $('#pv-keywords').value = (d.keywords||[]).join(', ');
-    const isProblem = d.category === 'problem';
-    $('#pv-problem-fs').classList.toggle('hidden', !isProblem);
-    if(d.problem){
-      $('#pv-cause').value = d.problem.cause || '';
-      $('#pv-solution').value = d.problem.solution || '';
-      $('#pv-result').value = d.problem.result || '';
-    } else {
-      $('#pv-cause').value=''; $('#pv-solution').value=''; $('#pv-result').value='';
-    }
-  }
-  $('#pv-category').addEventListener('change', e=>{
-    $('#pv-problem-fs').classList.toggle('hidden', e.target.value !== 'problem');
-  });
+/* ===== Speech ===== */
+const Speech = { recognition:null, supported: !!(window.SpeechRecognition||window.webkitSpeechRecognition),
+  init(){ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R) return;
+    this.recognition=new R(); this.recognition.lang='th-TH'; this.recognition.continuous=true; this.recognition.interimResults=true;
+    this.recognition.onresult=(e)=>{ let t=''; for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript; $('#transcriptBox').value=t; };
+    this.recognition.onerror=()=>{ toast('⚠️ ใช้เสียงไม่ได้ กรุณาพิมพ์แทน'); this.stop(); };
+  },
+  start(){ if(!this.recognition) return false; try{ this.recognition.start(); return true; }catch(e){ return false; } },
+  stop(){ if(this.recognition) try{ this.recognition.stop(); }catch(e){} }
+};
+Speech.init();
 
-  function buildWorkLogPayload(draft, clientRequestId){
-    const payload = {
-      category: draft.category, date: draft.date, time: draft.time,
-      location: draft.location, people: draft.people, detail: draft.detail,
-      keywords: draft.keywords, createdBy: state.user ? state.user.email : 'unknown',
-      clientRequestId
-    };
-    if(draft.category === 'problem'){
-      payload.cause = draft.cause; payload.solution = draft.solution; payload.result = draft.result;
-    }
-    return payload;
-  }
+function resetCaptureUI(){
+  $('#transcriptBox').value='';
+  $('#listenStatus').textContent = Speech.supported ? 'แตะปุ่มเพื่อเริ่มพูด' : 'เบราว์เซอร์นี้พิมพ์ข้อความได้อย่างเดียว';
+  $('#waveBox').classList.remove('on');
+  $('#toggleListenBtn').textContent='🎙️ เริ่มพูด';
+  $('#toggleListenBtn').disabled=!Speech.supported;
+  state.isListening=false;
+}
+$('#micBtn').addEventListener('click', ()=> showView('capture'));
+$('#toggleListenBtn').addEventListener('click', ()=>{
+  if(!state.isListening){
+    if(!Speech.start()){ toast('⚠️ เข้าไมค์ไม่ได้'); return; }
+    state.isListening=true; $('#listenStatus').textContent='🎙️ กำลังฟัง...'; $('#waveBox').classList.add('on'); $('#toggleListenBtn').textContent='⏹ หยุดพูด';
+  } else { Speech.stop(); state.isListening=false; $('#toggleListenBtn').textContent='🎙️ เริ่มพูด'; }
+});
+$('#analyzeBtn').addEventListener('click', ()=>{
+  const text = $('#transcriptBox').value.trim();
+  if(!text){ toast('กรุณาพูดหรือพิมพ์ข้อความก่อน'); return; }
+  if(state.isListening){ Speech.stop(); state.isListening=false; }
+  state.currentDraft = AI.analyze(text);
+  state.currentEvidence = [];
+  fillPreview(state.currentDraft);
+  showView('preview');
+});
 
-  $('#confirmSaveBtn').addEventListener('click', async ()=>{
-    const category = $('#pv-category').value;
-    const draft = {
-      category,
-      date: $('#pv-date').value,
-      time: $('#pv-time').value || 'ไม่พบข้อมูล',
-      location: $('#pv-location').value || 'ไม่พบข้อมูล',
-      people: $('#pv-people').value || 'ไม่พบข้อมูล',
-      detail: $('#pv-detail').value,
-      keywords: $('#pv-keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
-      cause: $('#pv-cause').value || 'ไม่พบข้อมูล',
-      solution: $('#pv-solution').value || 'ไม่พบข้อมูล',
-      result: $('#pv-result').value || 'ไม่พบข้อมูล'
-    };
-    const clientRequestId = genClientRequestId();
-    const payload = buildWorkLogPayload(draft, clientRequestId);
-    const btn = $('#confirmSaveBtn');
-    btn.disabled = true; btn.textContent = '⏳ กำลังบันทึก...';
+function fillPreview(d){
+  $('#pv-category').innerHTML = CONFIG.CATEGORIES.map(c=>`<option value="${c.id}" ${c.id===d.category?'selected':''}>${c.icon} ${c.name}</option>`).join('');
+  $('#pv-date').value=d.date; $('#pv-time').value=d.time; $('#pv-location').value=d.location;
+  $('#pv-people').value=d.people; $('#pv-detail').value=d.detail; $('#pv-keywords').value=(d.keywords||[]).join(', ');
+  $('#pv-problem-fs').classList.toggle('hidden', d.category!=='problem');
+  if(d.problem){ $('#pv-cause').value=d.problem.cause; $('#pv-solution').value=d.problem.solution; $('#pv-result').value=d.problem.result; }
+}
+$('#pv-category').addEventListener('change', e=> $('#pv-problem-fs').classList.toggle('hidden', e.target.value!=='problem'));
 
-    try{
-      const res = await Api.post('saveWorkLog', payload);
-      if(res.success){
-        let msg = res.duplicate ? 'รายการนี้ถูกบันทึกไปแล้ว' : ('✅ บันทึกสำเร็จ! +' + (res.exp||0) + ' EXP');
-        if(res.knowledgeId) msg += ' 🧠 สร้าง Knowledge ใหม่แล้ว';
-        toast(msg);
-        const meta = categoryMeta(category);
-        if(meta.requiresEvidence && !res.duplicate){
-          openEvidenceFlow({ workLogId: res.workLogId, categoryLabel: meta.icon+' '+meta.name, allowSkip:true, returnView:'history' });
-        } else { showView('history'); }
-      } else { throw new Error(res.error || 'บันทึกไม่สำเร็จ'); }
-    } catch(err){
-      state.pendingQueue.push({ type:'workLog', payload, clientRequestId });
-      toast('⚠️ บันทึกไม่สำเร็จ (' + err.message + ') — เก็บไว้รอส่งใหม่แล้ว', true);
-      showView('home');
-    } finally {
-      btn.disabled = false; btn.textContent = '✅ ยืนยัน & บันทึกจริง';
-    }
-  });
+$('#confirmSaveBtn').addEventListener('click', async ()=>{
+  const category = $('#pv-category').value;
+  const draft = {
+    email: state.currentUser.email, category,
+    date: $('#pv-date').value||todayISO(), time: $('#pv-time').value||'ไม่พบข้อมูล',
+    location: $('#pv-location').value||'ไม่พบข้อมูล', people: $('#pv-people').value||'ไม่พบข้อมูล',
+    detail: $('#pv-detail').value, keywords: $('#pv-keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
+    problemCause: category==='problem'? ($('#pv-cause').value||'ไม่พบข้อมูล'):'',
+    problemSolution: category==='problem'? ($('#pv-solution').value||'ไม่พบข้อมูล'):'',
+    problemResult: category==='problem'? ($('#pv-result').value||'ไม่พบข้อมูล'):''
+  };
+  toast('⏳ กำลังบันทึก...');
+  const res = await apiPost('saveWorkLog', draft);
+  if(!res.success){ toast('❌ บันทึกไม่สำเร็จ: '+(res.error||'')); return; }
+  state.currentWorkLogId = res.workLogId;
+  toast('🎉 +'+res.expGained+' EXP');
+  if(catInfo(category).evidence){
+    $('#evidenceList').innerHTML=''; state.currentEvidence=[]; showView('evidence');
+  } else {
+    showView('history');
+  }
+});
 
-  function openEvidenceFlow(context){
-    state.evidenceContext = context;
-    state.evidenceStaging = [];
-    $('#evidenceContextTitle').textContent = '📷 ' + context.categoryLabel;
-    $('#evidenceContextSub').textContent = context.allowSkip
-      ? 'ต้องการเพิ่มรูปภาพ/ลิงก์เพื่อยืนยันการทำงานหรือไม่?'
-      : 'เพิ่มหลักฐานเพิ่มเติมให้กับงานนี้';
-    $('#skipEvidenceBtn').classList.toggle('hidden', !context.allowSkip);
-    renderEvidenceStaging();
-    showView('evidence');
-  }
-  $('#evidenceBackBtn').addEventListener('click', ()=>{
-    const target = state.evidenceContext ? state.evidenceContext.returnView : 'home';
-    if(target === 'detail' && state.detailWorkLog){ showView('detail'); loadDetailEvidence(state.detailWorkLog.workLogId); }
-    else showView(target);
-  });
-  $('#skipEvidenceBtn').addEventListener('click', ()=>{
-    const target = state.evidenceContext ? state.evidenceContext.returnView : 'home';
-    state.evidenceStaging = [];
-    showView(target);
-    if(target==='history') loadHistory(true);
-  });
-  function renderEvidenceStaging(){
-    const box = $('#evidenceStagingList');
-    box.innerHTML = state.evidenceStaging.map((ev,i)=>{
-      if(ev.type==='image'){
-        return `<div class="evidence-item"><img class="evidence-thumb" src="${ev.previewUrl}"><button class="rm" data-idx="${i}">✕</button></div>`;
-      }
-      return `<div class="chip" style="position:relative;padding-right:22px;">🔗 ${escapeHtml(ev.url.slice(0,22))}...<button class="rm" data-idx="${i}" style="position:absolute;top:-6px;right:-2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;">✕</button></div>`;
-    }).join('') || '<span style="font-size:12px;color:var(--muted);">ยังไม่มีหลักฐานที่เพิ่ม</span>';
-    box.querySelectorAll('.rm').forEach(btn=>{
-      btn.addEventListener('click', ()=>{ state.evidenceStaging.splice(Number(btn.dataset.idx),1); renderEvidenceStaging(); });
-    });
-  }
-  $('#takePhotoBtn').addEventListener('click', ()=> $('#cameraInput').click());
-  $('#pickPhotoBtn').addEventListener('click', ()=> $('#galleryInput').click());
-  function resizeImageFile(file, maxSize){
-    return new Promise((resolve, reject)=>{
-      const reader = new FileReader();
-      reader.onload = (e)=>{
-        const img = new Image();
-        img.onload = ()=>{
-          let { width, height } = img;
-          if(width > maxSize || height > maxSize){
-            if(width > height){ height = Math.round(height * maxSize / width); width = maxSize; }
-            else { width = Math.round(width * maxSize / height); height = maxSize; }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.75));
-        };
-        img.onerror = ()=> reject(new Error('ไม่สามารถอ่านไฟล์ภาพได้'));
-        img.src = e.target.result;
-      };
-      reader.onerror = ()=> reject(new Error('ไม่สามารถอ่านไฟล์ได้'));
-      reader.readAsDataURL(file);
-    });
-  }
-  function handleFileInput(input){
-    input.addEventListener('change', async ()=>{
-      const file = input.files[0];
-      input.value = '';
-      if(!file) return;
-      try{
-        const base64 = await resizeImageFile(file, CONFIG.IMAGE_MAX_SIZE);
-        state.evidenceStaging.push({ type:'image', base64, mimeType:'image/jpeg', fileName:file.name, previewUrl: base64 });
-        renderEvidenceStaging();
-      }catch(err){ toast('⚠️ ไม่สามารถประมวลผลรูปภาพนี้ได้: ' + err.message, true); }
-    });
-  }
-  handleFileInput($('#cameraInput'));
-  handleFileInput($('#galleryInput'));
-  $('#addLinkBtn').addEventListener('click', ()=>{
-    const url = prompt('วางลิงก์ผลงาน เช่น Google Drive / YouTube / Google Photos');
-    if(!url || !url.trim()) return;
-    if(!/^https?:\/\//i.test(url.trim())){ toast('กรุณาวางลิงก์ที่ถูกต้อง', true); return; }
-    state.evidenceStaging.push({ type:'link', url:url.trim() });
-    renderEvidenceStaging();
-  });
-  $('#saveEvidenceBtn').addEventListener('click', async ()=>{
-    if(state.evidenceStaging.length===0){ toast('กรุณาเพิ่มรูปภาพหรือลิงก์ก่อน หรือกด "ข้ามไปก่อน"', true); return; }
-    const btn = $('#saveEvidenceBtn');
-    btn.disabled = true;
-    $('#evidenceUploadSpinner').classList.remove('hidden');
-    let successCount = 0, totalExp = 0;
-    const items = state.evidenceStaging.slice();
-    state.evidenceStaging = [];
-    for(const ev of items){
-      const clientRequestId = genClientRequestId();
-      const payload = {
-        workLogId: state.evidenceContext.workLogId,
-        type: ev.type, base64: ev.base64, mimeType: ev.mimeType, fileName: ev.fileName,
-        url: ev.url, createdBy: state.user ? state.user.email : 'unknown', clientRequestId
-      };
-      try{
-        const res = await Api.post('saveEvidence', payload);
-        if(res.success){ successCount++; totalExp += (res.exp||0); }
-        else throw new Error(res.error || 'บันทึกไม่สำเร็จ');
-      }catch(err){ state.pendingQueue.push({ type:'evidence', payload, clientRequestId }); }
-    }
-    $('#evidenceUploadSpinner').classList.add('hidden');
-    btn.disabled = false;
-    if(successCount > 0) toast(`✅ บันทึกหลักฐาน ${successCount} รายการสำเร็จ +${totalExp} EXP`);
-    if(state.pendingQueue.length > 0){ toast('⚠️ มีบางรายการค้างอยู่ รอส่งใหม่อัตโนมัติ', true); renderPendingBanner(); }
-    const target = state.evidenceContext.returnView;
-    if(target === 'detail' && state.detailWorkLog){ showView('detail'); loadDetailEvidence(state.detailWorkLog.workLogId); }
-    else { showView('history'); loadHistory(true); }
-  });
+/* ===== Evidence (เชื่อม Google Drive จริง) ===== */
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result.split(',')[1]); r.onerror=reject; r.readAsDataURL(file); });
+}
+async function uploadEvidence(file){
+  toast('⏳ กำลังอัปโหลดรูปภาพ...');
+  try{
+    const base64 = await fileToBase64(file);
+    const res = await apiPost('uploadEvidenceImage', { base64Data:base64, mimeType:file.type||'image/jpeg', workLogId:state.currentWorkLogId, email:state.currentUser.email });
+    if(res.success){ toast('✅ อัปโหลดสำเร็จ'); return { type:'image', url:res.thumbnailUrl }; }
+    toast('❌ อัปโหลดไม่สำเร็จ: '+(res.error||'')); return null;
+  }catch(e){ toast('❌ อัปโหลดล้มเหลว ตรวจสอบอินเทอร์เน็ต'); return null; }
+}
+async function addLink(url){
+  const res = await apiPost('addEvidenceLink', { url, workLogId:state.currentWorkLogId, email:state.currentUser.email });
+  if(res.success){ toast('✅ เพิ่มลิงก์สำเร็จ'); return { type:'link', url }; }
+  toast('❌ เพิ่มลิงก์ไม่สำเร็จ'); return null;
+}
+function renderEvidenceList(){
+  const box=$('#evidenceList');
+  box.innerHTML = state.currentEvidence.map((ev,i)=>{
+    if(ev.type==='image') return `<div class="evidence-item"><img class="evidence-thumb" src="${ev.url}"><button class="rm" data-idx="${i}">✕</button></div>`;
+    return `<div class="chip">🔗 ${ev.url.slice(0,20)}...<button class="rm" data-idx="${i}" style="position:absolute;top:-6px;right:-2px;">✕</button></div>`;
+  }).join('') || '<span style="font-size:12px;color:var(--muted);">ยังไม่มีหลักฐาน</span>';
+  box.querySelectorAll('.rm').forEach(btn=> btn.addEventListener('click', ()=>{ state.currentEvidence.splice(Number(btn.dataset.idx),1); renderEvidenceList(); }));
+}
+$('#takePhotoBtn').addEventListener('click', ()=> $('#cameraInput').click());
+$('#pickPhotoBtn').addEventListener('click', ()=> $('#galleryInput').click());
+$('#cameraInput').addEventListener('change', async e=>{ const f=e.target.files[0]; if(!f) return; const ev=await uploadEvidence(f); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } e.target.value=''; });
+$('#galleryInput').addEventListener('change', async e=>{ const f=e.target.files[0]; if(!f) return; const ev=await uploadEvidence(f); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } e.target.value=''; });
+$('#addLinkBtn').addEventListener('click', async ()=>{ const url=prompt('วางลิงก์ผลงาน'); if(!url||!url.trim()) return; const ev=await addLink(url.trim()); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } });
+$('#finishEvidenceBtn').addEventListener('click', ()=>{ toast('✅ บันทึกงานสมบูรณ์!'); showView('history'); });
+$('#skipEvidenceBtn').addEventListener('click', ()=>{ showView('history'); });
 
-  function renderPendingBanner(){
-    const wrap = $('#pendingBannerWrap');
-    if(state.pendingQueue.length === 0){ wrap.innerHTML=''; return; }
-    wrap.innerHTML = `<div class="pending-banner"><span>⚠️ มี ${state.pendingQueue.length} รายการรอส่งใหม่</span><button id="retryQueueBtn">ลองส่งใหม่</button></div>`;
-    $('#retryQueueBtn').addEventListener('click', flushPendingQueue);
+/* ===== History ===== */
+function fillHistoryFilter(){ $('#histCategoryFilter').innerHTML='<option value="">ทุกประเภท</option>'+CONFIG.CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join(''); }
+let historyCache=[];
+async function loadHistory(){
+  fillHistoryFilter();
+  $('#historyList').innerHTML='<p class="note">กำลังโหลด...</p>';
+  const res = await apiGet('getHistory', { email: state.currentUser.email });
+  if(!res.success){ $('#historyList').innerHTML='<p class="note">โหลดไม่สำเร็จ</p>'; return; }
+  historyCache = res.logs;
+  renderHistory();
+}
+function renderHistory(){
+  const catF=$('#histCategoryFilter').value, kwF=$('#histKeywordFilter').value.trim().toLowerCase();
+  let list = historyCache.slice();
+  if(catF) list=list.filter(w=>w.category===catF);
+  if(kwF) list=list.filter(w=>(w.detail+w.location+(w.keywords||[]).join(' ')).toLowerCase().includes(kwF));
+  const box=$('#historyList');
+  if(list.length===0){ box.innerHTML='<p class="note">ยังไม่มีรายการ</p>'; return; }
+  box.innerHTML = list.map(w=>{
+    const c=catInfo(w.category);
+    const prob = w.problemSolution ? `<div style="margin-top:8px;font-size:13px;"><b>สาเหตุ:</b> ${w.problemCause}<b>วิธีแก้:</b> ${w.problemSolution}<b>ผลลัพธ์:</b> ${w.problemResult}</div>` : '';
+    return `<div class="card log-card">
+      <div class="row"><b>${c.icon} ${c.name}</b><span class="exp">+${w.exp} EXP</span></div>
+      <div class="meta">${formatDateThai(w.date)} • ${w.time} • 📍${w.location}</div>
+      <p style="margin:8px 0 0;font-size:14px;">${w.detail}</p>${prob}
+    </div>`;
+  }).join('');
+}
+$('#histCategoryFilter').addEventListener('change', renderHistory);
+$('#histKeywordFilter').addEventListener('input', renderHistory);
+
+/* ===== Profile ===== */
+async function loadProfile(){
+  const res = await apiGet('getProfile', { email: state.currentUser.email });
+  if(!res.success){ toast('โหลดโปรไฟล์ไม่สำเร็จ'); return; }
+  $('#profLevelName').textContent = 'Level '+res.level+' — '+res.levelName;
+  $('#profExp').textContent = res.exp+' EXP';
+  const range = res.nextLevelMinExp ? (res.nextLevelMinExp-res.currentLevelMinExp) : 1;
+  const progress = res.nextLevelMinExp ? Math.min(100, Math.round(((res.exp-res.currentLevelMinExp)/range)*100)) : 100;
+  $('#profBar').style.width = progress+'%';
+  $('#profNext').textContent = res.nextLevelMinExp ? ('อีก '+(res.nextLevelMinExp-res.exp)+' EXP ถึง Lv.'+res.nextLevelName) : 'ระดับสูงสุดแล้ว';
+  $('#statLogs').textContent = res.stats.logs;
+  $('#statProblems').textContent = res.stats.problems;
+  $('#statKnowledge').textContent = res.stats.knowledge;
+  $('#statHelpful').textContent = res.stats.helpful;
+  $('#badgeGrid').innerHTML = res.badges.map(b=>`<div class="badge ${b.earned?'earned':''}"><span class="bic">${b.icon}</span>${b.name}</div>`).join('');
+  const cats = Object.keys(res.monthSummary.byCategory);
+  $('#monthSummary').innerHTML = cats.length ? (`<p style="font-size:13px;">รวม <b>${res.monthSummary.total}</b> รายการ</p>`+cats.map(c=>`<div class="row"><span>${catInfo(c).icon} ${catInfo(c).name}</span><b>${res.monthSummary.byCategory[c]}</b></div>`).join('')) : '<p class="note">ยังไม่มีข้อมูลเดือนนี้</p>';
+  $('#xpPillBtn').textContent = 'Lv.'+res.level+' ⭐'+res.exp;
+}
+
+/* ===== Init: ถ้ามี Login ค้างไว้ ให้เข้าเลย ===== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const savedEmail = localStorage.getItem('kku_user_email');
+  if(savedEmail){
+    state.currentUser = { email: savedEmail };
+    $('#bottomNav').classList.remove('hidden');
+    showView('home');
   }
-  async function flushPendingQueue(){
-    if(state.pendingQueue.length === 0 || !navigator.onLine) return;
-    toast('กำลังส่งข้อมูลที่ค้างอยู่...');
-    const queue = state.pendingQueue.slice();
-    state.pendingQueue = [];
-    for(const item of queue){
-      try{
-        const action = item.type === 'evidence' ? 'saveEvidence' : 'saveWorkLog';
-        const res = await Api.post(action, item.payload);
-        if(!res.success) throw new Error(res.error);
-      }catch(err){ state.pendingQueue.push(item); }
-    }
-    renderPendingBanner();
-    if(state.pendingQueue.length === 0) toast('✅ ส่งข้อมูลที่ค้างอยู่สำเร็จทั้งหมด');
-  }
-
-  async function loadHistory(reset){
-    renderPendingBanner();
-    if(reset){ state.historyOffset = 0; state.historyItems = []; $('#historyList').innerHTML=''; }
-    $('#historySpinner').classList.remove('hidden');
-    $('#loadMoreBtn').classList.add('hidden');
-    try{
-      const res = await Api.get('getWorkLogs', { limit: CONFIG.HISTORY_PAGE_SIZE, offset: state.historyOffset });
-      if(!res.success) throw new Error(res.error || 'โหลดข้อมูลไม่สำเร็จ');
-      state.historyItems = state.historyItems.concat(res.items);
-      state.historyOffset += res.items.length;
-      renderHistoryList();
-      if(state.historyOffset < res.total) $('#loadMoreBtn').classList.remove('hidden');
-    }catch(err){
-      toast('❌ โหลดประวัติไม่สำเร็จ: ' + err.message, true);
-      $('#historyList').innerHTML = '<p class="note">ไม่สามารถโหลดข้อมูลได้ ตรวจสอบการเชื่อมต่อ แล้วลองใหม่</p>';
-    } finally { $('#historySpinner').classList.add('hidden'); }
-  }
-  function renderHistoryList(){
-    const box = $('#historyList');
-    if(state.historyItems.length === 0){
-      box.innerHTML = '<p class="note">ยังไม่มีรายการ ลองกดปุ่ม 🎙️ เพื่อบันทึกงานแรกของคุณ</p>';
-      return;
-    }
-    box.innerHTML = state.historyItems.map(w=>{
-      const meta = categoryMeta(w.category);
-      return `<div class="card log-card" data-worklog="${w.workLogId}" style="cursor:pointer;">
-        <div style="display:flex;justify-content:space-between;">
-          <b>${meta.icon} ${meta.name}</b><span class="exp">+${w.exp} EXP</span>
-        </div>
-        <div class="meta">${formatDateThai(w.date)} • ${w.time} • 📍${escapeHtml(w.location)}</div>
-        <p style="margin:8px 0 0;font-size:14px;">${escapeHtml(w.detail)}</p>
-        <div class="meta" style="margin-top:6px;">รหัส: ${w.workLogId} • แตะเพื่อดูรายละเอียด ›</div>
-      </div>`;
-    }).join('');
-    box.querySelectorAll('[data-worklog]').forEach(el=>{
-      el.addEventListener('click', ()=>{
-        const item = state.historyItems.find(x=>x.workLogId === el.dataset.worklog);
-        if(item) openDetail(item);
-      });
-    });
-  }
-  $('#loadMoreBtn').addEventListener('click', ()=> loadHistory(false));
-
-  function openDetail(item){
-    state.detailWorkLog = item;
-    renderDetailCard(item);
-    showView('detail');
-    loadDetailEvidence(item.workLogId);
-  }
-  function renderDetailCard(w){
-    const meta = categoryMeta(w.category);
-    let problemHtml = '';
-    if(w.category === 'problem'){
-      problemHtml = `
-        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">สาเหตุ</p>
-        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.cause||'ไม่พบข้อมูล')}</p>
-        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">วิธีแก้</p>
-        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.solution||'ไม่พบข้อมูล')}</p>
-        <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">ผลลัพธ์</p>
-        <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.result||'ไม่พบข้อมูล')}</p>
-      `;
-    }
-    $('#detailCard').innerHTML = `
-      <h3>${meta.icon} ${meta.name}</h3>
-      <div class="meta">${formatDateThai(w.date)} • ${w.time} • 📍${escapeHtml(w.location)}</div>
-      <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">ผู้เกี่ยวข้อง</p>
-      <p style="margin:0 0 8px;font-size:14px;">${escapeHtml(w.people)}</p>
-      <p style="margin:12px 0 4px;font-size:12px;color:var(--muted);">รายละเอียด</p>
-      <p style="margin:0;font-size:14px;">${escapeHtml(w.detail)}</p>
-      ${problemHtml}
-      <div class="meta" style="margin-top:12px;">รหัส: ${w.workLogId} • +${w.exp} EXP</div>
-    `;
-  }
-  async function loadDetailEvidence(workLogId){
-    $('#detailEvidenceSpinner').classList.remove('hidden');
-    $('#detailEvidenceList').innerHTML = '';
-    try{
-      const res = await Api.get('getEvidenceByWorkLog', { workLogId });
-      if(!res.success) throw new Error(res.error);
-      renderDetailEvidence(res.items);
-    }catch(err){
-      $('#detailEvidenceList').innerHTML = '<p class="note">ไม่สามารถโหลดหลักฐานได้: '+escapeHtml(err.message)+'</p>';
-    }finally{ $('#detailEvidenceSpinner').classList.add('hidden'); }
-  }
-  function renderDetailEvidence(items){
-    const box = $('#detailEvidenceList');
-    if(!items || items.length===0){ box.innerHTML='<p class="note">ยังไม่มีหลักฐาน — กดปุ่มด้านล่างเพื่อเพิ่ม</p>'; return; }
-    box.innerHTML = items.map(ev=>{
-      if(ev.type==='image'){
-        return `<a href="${safeHref(ev.fileUrl)}" target="_blank" rel="noopener noreferrer"><img class="evidence-thumb-lg" src="${ev.thumbnailUrl||ev.fileUrl}"></a>`;
-      }
-      return `<a class="chip" href="${safeHref(ev.fileUrl)}" target="_blank" rel="noopener noreferrer">🔗 ดูลิงก์ผลงาน</a>`;
-    }).join('');
-  }
-  $('#addEvidenceFromDetailBtn').addEventListener('click', ()=>{
-    const w = state.detailWorkLog;
-    if(!w) return;
-    const meta = categoryMeta(w.category);
-    openEvidenceFlow({ workLogId: w.workLogId, categoryLabel: meta.icon+' '+meta.name, allowSkip:false, returnView:'detail' });
-  });
-
-  async function doSearch(){
-    const query = $('#searchInput').value.trim();
-    if(!query){ toast('กรุณาพิมพ์หรือพูดคำค้นก่อน', true); return; }
-    if(state.isSearchListening){ SpeechService.stop(); state.isSearchListening=false; $('#searchMicBtn').textContent='🎙️'; }
-
-    $('#searchSpinner').classList.remove('hidden');
-    $('#searchResults').innerHTML = '';
-    try{
-      const res = await Api.get('searchKnowledge', { q: query, searchedBy: state.user ? state.user.email : 'unknown' });
-      if(!res.success) throw new Error(res.error || 'ค้นหาไม่สำเร็จ');
-      renderSearchResults(res.items);
-    }catch(err){
-      $('#searchResults').innerHTML = '<p class="note">ไม่สามารถค้นหาได้: '+escapeHtml(err.message)+'</p>';
-    } finally { $('#searchSpinner').classList.add('hidden'); }
-  }
-  $('#searchBtn').addEventListener('click', doSearch);
-  $('#searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') doSearch(); });
-
-  function renderSearchResults(items){
-    const box = $('#searchResults');
-    if(!items || items.length===0){
-      box.innerHTML = '<p class="note">ไม่พบข้อมูลที่เกี่ยวข้อง — ลองใช้คำอื่น หรือถ้าคุณเพิ่งแก้ปัญหานี้ได้ ลองบันทึกไว้ที่หน้า 🎙️ เพื่อสร้าง Knowledge ใหม่ให้คนอื่น</p>';
-      return;
-    }
-    box.innerHTML = items.map(k=>`
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;gap:8px;">
-          <b>🖥️ ${escapeHtml(k.problemTitle)}</b>
-          <span class="relevance">${k.relevance}</span>
-        </div>
-        <p style="font-size:13px;margin:8px 0 4px;"><b>สาเหตุที่เคยพบ:</b> ${escapeHtml(k.cause)}</p>
-        <p style="font-size:13px;margin:4px 0;"><b>วิธีแก้:</b> ${escapeHtml(k.solution)}</p>
-        <p style="font-size:13px;margin:4px 0;"><b>ผลลัพธ์:</b> ${escapeHtml(k.result)}</p>
-        <div class="meta" style="margin-top:6px;">โดย ${escapeHtml(k.createdBy||'ไม่ทราบ')} • ${formatDateThai(k.createdAt ? k.createdAt.slice(0,10) : '')}</div>
-        <div class="kb-actions">
-          <button data-fb="1" data-id="${k.knowledgeId}">👍 ช่วยได้ (${k.helpfulCount})</button>
-          <button data-fb="0" data-id="${k.knowledgeId}">👎 ไม่ช่วย (${k.notHelpfulCount})</button>
-        </div>
-      </div>
-    `).join('');
-    box.querySelectorAll('[data-fb]').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const knowledgeId = btn.dataset.id;
-        const helpful = btn.dataset.fb === '1';
-        box.querySelectorAll(`[data-id="${knowledgeId}"]`).forEach(b=> b.disabled = true);
-        try{
-          const res = await Api.post('submitFeedback', { knowledgeId, helpful });
-          if(res.success){
-            toast(helpful ? '👍 ขอบคุณสำหรับความคิดเห็น! เจ้าของความรู้จะได้ EXP' : 'ขอบคุณสำหรับความคิดเห็น');
-            doSearch();
-          } else { throw new Error(res.error); }
-        }catch(err){
-          toast('⚠️ ส่งความคิดเห็นไม่สำเร็จ: ' + err.message, true);
-          box.querySelectorAll(`[data-id="${knowledgeId}"]`).forEach(b=> b.disabled = false);
-        }
-      });
-    });
-  }
-
-  /* ============================================================
-   * PROFILE — โหลดข้อมูล EXP, Level, สถิติ, Badge ของผู้ใช้
-   * ============================================================*/
-  async function loadProfile(){
-    $('#profileSpinner').classList.remove('hidden');
-    $('#profileContent').classList.add('hidden');
-    try{
-      const email = state.user ? state.user.email : '';
-      const res = await Api.get('getProfile', { email });
-      if(!res.success) throw new Error(res.error || 'โหลดโปรไฟล์ไม่สำเร็จ');
-      renderProfile(res);
-    }catch(err){
-      toast('❌ โหลดโปรไฟล์ไม่สำเร็จ: ' + err.message, true);
-    } finally {
-      $('#profileSpinner').classList.add('hidden');
-      $('#profileContent').classList.remove('hidden');
-    }
-  }
-  function renderProfile(data){
-    $('#profLevelName').textContent = 'Level ' + data.level + ' — ' + data.levelName;
-    $('#profExp').textContent = data.exp + ' EXP';
-
-    let progress = 100;
-    if(data.nextLevelMinExp !== null){
-      const range = data.nextLevelMinExp - data.currentLevelMinExp;
-      const gained = data.exp - data.currentLevelMinExp;
-      progress = range > 0 ? Math.min(100, Math.round((gained / range) * 100)) : 100;
-    }
-    $('#profBar').style.width = progress + '%';
-    $('#profNext').textContent = data.nextLevelMinExp !== null
-      ? ('อีก ' + (data.nextLevelMinExp - data.exp) + ' EXP ถึง Lv.' + (data.level+1) + ' (' + data.nextLevelName + ')')
-      : 'ระดับสูงสุดแล้ว! 🎉';
-
-    $('#statLogs').textContent = data.stats.logs;
-    $('#statProblems').textContent = data.stats.problems;
-    $('#statKnowledge').textContent = data.stats.knowledge;
-    $('#statHelpful').textContent = data.stats.helpful;
-
-    $('#badgeGrid').innerHTML = data.badges.map(b=>
-      `<div class="badge ${b.earned?'earned':''}"><span class="bic">${b.icon}</span>${escapeHtml(b.name)}</div>`
-    ).join('');
-
-    const newBadges = data.badges.filter(b=>b.isNew);
-    newBadges.forEach((b, i)=>{
-      setTimeout(()=> toast('🏆 ยินดีด้วย! ปลดล็อค Badge ใหม่: ' + b.name), 500 + i*1000);
-    });
-
-    const catNames = { photography:'📸 งานถ่ายภาพ', video:'🎥 งานวิดีโอ', meeting:'🗣️ งานประชุม', event:'🎪 งานจัดกิจกรรม', problem:'🛠️ ปัญหา/แก้ปัญหา', document:'📄 งานเอกสาร', other:'📌 งานอื่นๆ' };
-    const ms = data.monthSummary;
-    if(ms.total === 0){
-      $('#monthSummary').innerHTML = '<p class="note">ยังไม่มีข้อมูลในเดือนนี้</p>';
-    } else {
-      let html = `<p style="font-size:13px;margin-top:0;">คุณบันทึกงานทั้งหมด <b>${ms.total}</b> รายการในเดือนนี้</p>`;
-      Object.keys(ms.byCategory).forEach(cat=>{
-        html += `<div class="cat-row"><span>${catNames[cat]||cat}</span><b>${ms.byCategory[cat]}</b></div>`;
-      });
-      $('#monthSummary').innerHTML = html;
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{ updateNetBadge(); resetCaptureUI(); });
-  updateNetBadge();
-  resetCaptureUI();
-
+});
 })();
 </script>
 </body>
