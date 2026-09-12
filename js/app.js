@@ -10,7 +10,7 @@ var transcript = '';
 var currentProblemId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-  initGSI();
+  waitForGoogleIdentity();
   checkStoredToken();
 
   document.querySelectorAll('.btn-back').forEach(function(btn) {
@@ -54,6 +54,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── Google Login ──────────────────────────────────────
+function waitForGoogleIdentity() {
+  if (
+    window.google &&
+    google.accounts &&
+    google.accounts.id
+  ) {
+    initGSI();
+    return;
+  }
+
+  setTimeout(waitForGoogleIdentity, 100);
+}
 
 function initGSI() {
   google.accounts.id.initialize({
