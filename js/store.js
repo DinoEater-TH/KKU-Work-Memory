@@ -111,6 +111,13 @@ var WorkStore = {
     this._write(this.KEY_QUEUE, q);
   },
 
+  removeLocal: function(localId) {
+    var list = this._read(this.KEY_WORKS).filter(function(w) {
+      return w.localId !== localId && w.workId !== localId;
+    });
+    this._write(this.KEY_WORKS, list);
+  },
+
   mergeWithServer: function(serverLogs) {
     var local = this._read(this.KEY_WORKS);
     var byWorkId = {};
@@ -163,6 +170,17 @@ var WorkStore = {
 var SyncWorker = {
   _busy: false,
   MAX_ATTEMPTS: 5,
+  _pendingNotification: false,
+
+  _notify: function() {
+    if (this._pendingNotification) return;
+    var ops = WorkStore.pendingOps();
+    if (ops.length === 0) return;
+    this._pendingNotification = true;
+    if (typeof showToast === 'function') {
+      try { showToast('กำลังซิงค์ ' + ops.length + ' รายการ...'); } catch(e){}
+    }
+  },
 
   flush: function() {
     if (this._busy) return;
@@ -176,10 +194,17 @@ var SyncWorker = {
     this._runNext(ops.slice(), 0);
   },
 
+  _actionFor: function(type) {
+    if (type === 'updateWork') return 'updateWork';
+    if (type === 'deleteWork') return 'deleteWork';
+    return 'createWork';
+  },
+
   _runNext: function(ops, idx) {
     var self = this;
     if (idx >= ops.length) {
       self._busy = false;
+      self._pendingNotification = false;
       return;
     }
 
@@ -199,21 +224,34 @@ var SyncWorker = {
       }
     }
 
-    API.post('createWork', op.payload, { silent: true })
+    var action = self._actionFor(op.type);
+    API.post(action, op.payload, { silent: true })
       .then(function(res) {
         if (res && res.success) {
-          WorkStore.markSynced(op.localId, res.workId || null);
+          if (op.type === 'deleteWork') {
+            WorkStore.removeLocal(op.localId);
+          } else {
+            WorkStore.markSynced(op.localId, res.workId || null);
+          }
           WorkStore.dequeueDone(op.opId);
-          self._runNext(ops, idx + 1);
+
+          if (typeof showToast === 'function') {
+            try { showToast('ซิงค์สำเร็จ'); } catch(e) {}
+          }
           if (typeof loadEXP === 'function') {
             try { loadEXP(); } catch (e) {}
           }
+          self._runNext(ops, idx + 1);
         } else {
           op.attempts = (op.attempts || 0) + 1;
-          op.lastError = (res && res.message) || 'บันทึกไม่สำเร็จ';
+          op.lastError = (res && res.message) || 'ไม่สำเร็จ';
           WorkStore.updateOp(op);
           WorkStore.markFailed(op.localId, op.lastError);
+          if (typeof showToast === 'function') {
+            try { showToast('ซิงค์ไม่สำเร็จ: ' + op.lastError, true); } catch(e) {}
+          }
           self._busy = false;
+          self._pendingNotification = false;
         }
       })
       .catch(function(err) {
@@ -222,6 +260,7 @@ var SyncWorker = {
         WorkStore.updateOp(op);
         WorkStore.markFailed(op.localId, 'รอเครือข่าย/เซิร์ฟเวอร์');
         self._busy = false;
+        self._pendingNotification = false;
       });
   }
 };
