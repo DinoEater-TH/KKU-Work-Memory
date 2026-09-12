@@ -643,5 +643,127 @@ body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── Work Detail ────────────────────────────── */
+.detail-section {
+  margin-bottom: 16px;
+}
+
+.detail-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-size: 15px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.detail-desc {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.detail-cat {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #e8edf5;
+  color: var(--primary);
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.detail-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-actions .btn {
+  padding: 12px;
+  font-size: 15px;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+/* ── Sync Banner ────────────────────────────── */
+.sync-banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.sync-banner-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.sync-banner-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ── Evidence ────────────────────────────────── */
+.detail-evidence h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.evidence-thumb {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.evidence-thumb img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.evidence-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  cursor: pointer;
+}
+
+.evidence-overlay img {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
 /* ── Utility ───────────────────────────────── */
 .hidden { display: none !important; }
