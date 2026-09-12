@@ -8,6 +8,7 @@ var recognition = null;
 var isRecording = false;
 var transcript = '';
 var currentProblemId = null;
+var _lastResultIdx = -1;
 
 // ── Init ──────────────────────────────────────────────
 
@@ -242,18 +243,20 @@ function startRecording() {
   recognition.lang = 'th-TH';
   recognition.interimResults = true;
   recognition.continuous = true;
+  _lastResultIdx = -1;
 
   recognition.onresult = function(event) {
     var interim = '';
-    var finalText = '';
     for (var i = event.resultIndex; i < event.results.length; i++) {
       if (event.results[i].isFinal) {
-        finalText += event.results[i][0].transcript;
+        if (i > _lastResultIdx) {
+          transcript = (transcript + ' ' + event.results[i][0].transcript).trim();
+          _lastResultIdx = i;
+        }
       } else {
         interim += event.results[i][0].transcript;
       }
     }
-    transcript = (transcript + ' ' + finalText).trim();
     updateTranscriptDisplay(transcript, interim);
   };
 
@@ -265,7 +268,7 @@ function startRecording() {
 
   recognition.onend = function() {
     if (isRecording) {
-      recognition.start();
+      try { recognition.start(); } catch(e) { stopRecordingUI(); }
     } else {
       stopRecordingUI();
     }
@@ -663,11 +666,23 @@ function openProblemReport() {
 // ── Profile ───────────────────────────────────────────
 
 function loadProfile() {
-  API.get('getEXP').then(function(expData) {
-    var stored = localStorage.getItem('kku_user');
-    var user = stored ? JSON.parse(stored) : {};
-    var el = document.getElementById('profile-content');
+  var stored = localStorage.getItem('kku_user');
+  var user = stored ? JSON.parse(stored) : {};
+  var el = document.getElementById('profile-content');
 
+  // Show cached profile immediately
+  el.innerHTML = ''
+    + '<div class="profile-header">'
+    + '  <div class="profile-avatar">' + (user.name ? user.name.charAt(0) : '?') + '</div>'
+    + '  <h2>' + escapeHtml(user.name || 'ผู้ใช้') + '</h2>'
+    + '  <p class="profile-email">' + escapeHtml(user.email || '') + '</p>'
+    + '</div>'
+    + '<div class="exp-card">'
+    + '  <div class="exp-number">...</div>'
+    + '  <div class="exp-label">กำลังโหลด EXP</div>'
+    + '</div>';
+
+  API.get('getEXP').then(function(expData) {
     var txHtml = '';
     if (expData.recentTransactions) {
       txHtml = '<h3>ธุรกรรมล่าสุด</h3>'
@@ -693,13 +708,25 @@ function loadProfile() {
       + txHtml;
 
     document.getElementById('exp-badge').textContent = (expData.exp || 0) + ' EXP';
+  }).catch(function() {
+    var isTokenIssue = !API.getToken();
+    el.innerHTML = ''
+      + '<div class="profile-header">'
+      + '  <div class="profile-avatar">' + (user.name ? user.name.charAt(0) : '?') + '</div>'
+      + '  <h2>' + escapeHtml(user.name || 'ผู้ใช้') + '</h2>'
+      + '  <p class="profile-email">' + escapeHtml(user.email || '') + '</p>'
+      + '</div>'
+      + '<div class="exp-card" style="background:#e5e7eb;color:#6b7280">'
+      + '  <div class="exp-number">-</div>'
+      + '  <div class="exp-label">' + (isTokenIssue ? 'กรุณา login ใหม่' : 'เชื่อมต่อไม่ได้') + '</div>'
+      + '</div>';
   });
 }
 
 function loadEXP() {
   API.get('getEXP').then(function(data) {
     document.getElementById('exp-badge').textContent = (data.exp || 0) + ' EXP';
-  });
+  }).catch(function() {});
 }
 
 // ── Logout ────────────────────────────────────────────
