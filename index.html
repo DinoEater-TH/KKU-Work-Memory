@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1a56db">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>KKU Memory</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://accounts.google.com/gsi/client"></script>
@@ -152,5 +155,10 @@
   <script src="js/api.js"></script>
   <script src="js/store.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    }
+  </script>
 </body>
 </html>
