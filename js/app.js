@@ -12,7 +12,14 @@ var currentProblemId = null;
 // ── Init ──────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function() {
-  initGSI();
+  function tryInitGSI() {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      initGSI();
+      return;
+    }
+    setTimeout(tryInitGSI, 500);
+  }
+  tryInitGSI();
   checkStoredToken();
 
   // Back buttons
