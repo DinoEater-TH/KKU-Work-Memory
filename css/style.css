@@ -1,4 +1,3 @@
-
 /* ============================================================
    style.css — Mobile-First KKU Memory
    ============================================================ */
@@ -443,6 +442,22 @@ body {
   border-radius: 10px;
   background: #e5e7eb;
   color: var(--text-secondary);
+}
+
+.list-item-badge.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.list-item-badge.badge-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.list-item-badge.badge-recorded,
+.list-item-badge.badge-completed {
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .empty-state {
