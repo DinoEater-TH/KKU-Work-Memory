@@ -15,12 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
   initGSI();
   checkStoredToken();
 
+  // Back buttons
   document.querySelectorAll('.btn-back').forEach(function(btn) {
     btn.addEventListener('click', function() {
       navigateTo(this.dataset.target);
     });
   });
 
+  // Bottom nav
   document.querySelectorAll('.nav-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var screen = this.dataset.screen;
@@ -28,21 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
       this.classList.add('active');
       if (screen === 'history') loadHistory();
-      if (screen === 'search') {}
+      if (screen === 'search') {} // focus input
       if (screen === 'profile') loadProfile();
     });
   });
 
+  // Home buttons
   document.getElementById('btn-record').addEventListener('click', openTranscriptScreen);
   document.getElementById('btn-history').addEventListener('click', function() { navigateTo('history'); loadHistory(); });
   document.getElementById('btn-search').addEventListener('click', function() { navigateTo('search'); });
   document.getElementById('btn-knowledge').addEventListener('click', function() { navigateTo('search'); });
   document.getElementById('btn-problems').addEventListener('click', openProblemReport);
 
+  // Search
   var searchInput = document.getElementById('search-input');
   searchInput.addEventListener('input', debounce(performSearch, 400));
 
+  // Notification acknowledge
   document.getElementById('notif-acknowledge').addEventListener('click', acknowledgeNotif);
+
+  // Logout
   document.getElementById('btn-logout').addEventListener('click', logout);
 
   window.addEventListener('online', function() {
@@ -86,7 +93,11 @@ function handleCredentialResponse(response) {
   API.setToken(token);
   currentUser = payload;
   document.getElementById('login-error').classList.add('hidden');
+
+  // Store user info
   localStorage.setItem('kku_user', JSON.stringify({ email: payload.email, name: payload.name, picture: payload.picture }));
+
+  // Check mandatory notifications
   checkNotifications();
 }
 
@@ -113,6 +124,8 @@ function checkStoredToken() {
   }
 }
 
+// ── Login Error ───────────────────────────────────────
+
 function showLoginError(msg) {
   var el = document.getElementById('login-error');
   el.textContent = msg;
@@ -126,6 +139,8 @@ function handleAuthError() {
   document.getElementById('login-error').classList.remove('hidden');
   document.getElementById('login-error').textContent = 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่';
 }
+
+// ── Notifications ─────────────────────────────────────
 
 function checkNotifications() {
   API.get('checkMandatoryNotif').then(function(data) {
@@ -146,11 +161,14 @@ function checkNotifications() {
 }
 
 function acknowledgeNotif() {
+  var title = document.getElementById('notif-title').textContent;
   API.post('acknowledgeNotif', {}).then(function() {
     navigateTo('home');
     loadEXP();
   });
 }
+
+// ── Navigation ────────────────────────────────────────
 
 function navigateTo(screen) {
   document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
@@ -158,11 +176,14 @@ function navigateTo(screen) {
   if (target) target.classList.add('active');
   currentScreen = screen;
 
+  // Update bottom nav
   document.querySelectorAll('.nav-btn').forEach(function(b) {
     b.classList.remove('active');
     if (b.dataset.screen === screen) b.classList.add('active');
   });
 }
+
+// ── Voice Recording ──────────────────────────────────
 
 function openTranscriptScreen() {
   navigateTo('transcript');
@@ -196,8 +217,11 @@ function openTranscriptScreen() {
 }
 
 function toggleRecording() {
-  if (isRecording) stopRecording();
-  else startRecording();
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording();
+  }
 }
 
 function startRecording() {
@@ -216,8 +240,11 @@ function startRecording() {
     var interim = '';
     var finalText = '';
     for (var i = event.resultIndex; i < event.results.length; i++) {
-      if (event.results[i].isFinal) finalText += event.results[i][0].transcript;
-      else interim += event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalText += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
     }
     transcript = (transcript + ' ' + finalText).trim();
     updateTranscriptDisplay(transcript, interim);
@@ -230,8 +257,11 @@ function startRecording() {
   };
 
   recognition.onend = function() {
-    if (isRecording) recognition.start();
-    else stopRecordingUI();
+    if (isRecording) {
+      recognition.start();
+    } else {
+      stopRecordingUI();
+    }
   };
 
   recognition.start();
@@ -242,12 +272,15 @@ function startRecording() {
 
 function stopRecording() {
   isRecording = false;
-  if (recognition) recognition.stop();
+  if (recognition) {
+    recognition.stop();
+  }
 }
 
 function stopRecordingUI() {
   document.getElementById('btn-mic').classList.remove('recording');
   document.getElementById('voice-hint').textContent = 'แตะปุ่มเพื่อพูด';
+
   if (transcript.trim()) {
     document.getElementById('voice-actions').classList.remove('hidden');
   }
@@ -265,6 +298,8 @@ function resetTranscript() {
   document.getElementById('voice-hint').textContent = 'แตะปุ่มเพื่อพูด';
 }
 
+// ── Analyze & Save ───────────────────────────────────
+
 function analyzeTranscript() {
   var parsed = ruleBasedParse(transcript);
   showConfirmForm(parsed);
@@ -272,9 +307,16 @@ function analyzeTranscript() {
 
 function ruleBasedParse(text) {
   var result = {
-    date: '', startTime: '', endTime: '', location: '', category: '', title: '', description: text
+    date: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    category: '',
+    title: '',
+    description: text
   };
 
+  // Date patterns
   var datePatterns = [
     /(\d{1,2})\s*[\/\-]\s*(\d{1,2})\s*[\/\-]\s*(\d{2,4})/g,
     /(\d{1,2})\s*(ม\.?ค|ก\.?พ|มี\.?ค|เม\.?ย|พ\.?ค|มิ\.?ย|ก\.?ค|ส\.?ค|ก\.?ย|ต\.?ค|พ\.?ย|ธ\.?ค)/i,
@@ -283,9 +325,13 @@ function ruleBasedParse(text) {
 
   for (var i = 0; i < datePatterns.length; i++) {
     var match = datePatterns[i].exec(text);
-    if (match) { result.date = match[0]; break; }
+    if (match) {
+      result.date = match[0];
+      break;
+    }
   }
 
+  // Time patterns
   var timeMatch = text.match(/(\d{1,2}[:\.]\d{2})\s*(?:น\.?|ถึง)\s*(\d{1,2}[:\.]\d{2})/);
   if (timeMatch) {
     result.startTime = timeMatch[1].replace('.', ':');
@@ -295,9 +341,11 @@ function ruleBasedParse(text) {
     if (singleTime) result.startTime = singleTime[1].replace('.', ':');
   }
 
+  // Location
   var locMatch = text.match(/(?:ที่|ตึก|ห้อง|อาคาร|ชั้น)\s*([\u0E00-\u0E7Fa-zA-Z0-9\.\/\-]+)/);
   if (locMatch) result.location = locMatch[0];
 
+  // Category
   var categories = {
     'ถ่ายภาพ,ถ่ายรูป,รูปภาพ,กล้อง': 'ถ่ายภาพ',
     'วิดีโอ,ตัดต่อ,คลิป': 'วิดีโอ',
@@ -317,7 +365,9 @@ function ruleBasedParse(text) {
     if (result.category) break;
   }
 
+  // Title — first ~50 chars of description
   result.title = text.substring(0, 60).trim();
+
   return result;
 }
 
@@ -445,6 +495,8 @@ function saveWork() {
   SyncWorker.flush();
 }
 
+// ── History ───────────────────────────────────────────
+
 function syncBadgeLabel(w) {
   if (w.syncStatus === 'pending' || w.syncStatus === 'syncing') return 'รอซิงค์';
   if (w.syncStatus === 'failed') return 'ซิงค์ไม่สำเร็จ';
@@ -493,6 +545,8 @@ function loadHistory() {
   });
 }
 
+// ── Knowledge Search ──────────────────────────────────
+
 function performSearch() {
   var query = document.getElementById('search-input').value.trim();
   if (query.length < 2) {
@@ -523,6 +577,7 @@ function performSearch() {
 function viewProblemDetail(problemId) {
   currentProblemId = problemId;
   API.get('getSolutions', { problemId: problemId }).then(function(data) {
+    var sc = document.getElementById('screen-problem-detail');
     var el = document.getElementById('problem-detail-content');
 
     var solutionsHtml = (data.solutions || []).map(function(s) {
@@ -542,6 +597,7 @@ function viewProblemDetail(problemId) {
 
     navigateTo('problem-detail');
 
+    // Load existing feedback votes
     (data.solutions || []).forEach(function(s) {
       API.get('getFeedback', { solutionId: s.solutionId }).then(function(fb) {
         var fbEl = document.getElementById('fb-' + s.solutionId);
@@ -581,16 +637,23 @@ function openAddSolution() {
   });
 }
 
+// ── Problem Report ────────────────────────────────────
+
 function openProblemReport() {
   var title = prompt('หัวข้อปัญหา:');
   if (!title || !title.trim()) return;
   var desc = prompt('รายละเอียด (optional):');
 
   API.post('reportProblem', { title: title.trim(), description: (desc || '').trim() }).then(function(res) {
-    if (res.success) showToast('รายงานปัญหาแล้ว!');
-    else showToast(res.message || 'ไม่สามารถบันทึกได้', true);
+    if (res.success) {
+      showToast('รายงานปัญหาแล้ว!');
+    } else {
+      showToast(res.message || 'ไม่สามารถบันทึกได้', true);
+    }
   });
 }
+
+// ── Profile ───────────────────────────────────────────
 
 function loadProfile() {
   API.get('getEXP').then(function(expData) {
@@ -632,6 +695,8 @@ function loadEXP() {
   });
 }
 
+// ── Logout ────────────────────────────────────────────
+
 function logout() {
   API.clearToken();
   currentUser = null;
@@ -640,40 +705,381 @@ function logout() {
   navigateTo('login');
 }
 
+// ── View Work Detail ─────────────────────────────────
+
 function viewWorkDetail(id) {
   var local = null;
-  if (id && String(id).indexOf('L-') === 0) local = WorkStore.getByLocalId(id);
-  else local = WorkStore.getByWorkId(id);
-
-  function showDetail(w, syncNote) {
-    alert([
-      'หัวข้อ: ' + (w.title || '-'),
-      'วันที่: ' + (w.workDate || '-'),
-      'เวลา: ' + (w.startTime || '-') + ' - ' + (w.endTime || '-'),
-      'สถานที่: ' + (w.location || '-'),
-      'หมวดหมู่: ' + (w.category || '-'),
-      'รายละเอียด: ' + (w.description || '-'),
-      'สถานะ: ' + (w.status || '-'),
-      syncNote ? 'ซิงค์: ' + syncNote : ''
-    ].filter(Boolean).join('\n'));
-  }
-
-  if (local && (!local.workId || local.syncStatus === 'pending' || local.syncStatus === 'failed')) {
-    showDetail(local, syncBadgeLabel(local));
-    return;
+  if (id && String(id).indexOf('L-') === 0) {
+    local = WorkStore.getByLocalId(id);
+  } else {
+    local = WorkStore.getByWorkId(id);
   }
 
   var workId = (local && local.workId) || id;
+
+  function renderDetail(w, srcInfo) {
+    var hasImages = w.evidenceImages && w.evidenceImages.length;
+    var imagesHtml = '';
+    if (hasImages) {
+      imagesHtml = '<div class="detail-evidence">'
+        + '<h3>📸 หลักฐาน</h3>'
+        + '<div class="evidence-grid">'
+        + w.evidenceImages.map(function(img, idx) {
+            return '<div class="evidence-thumb" onclick="ViewEvidence.expand(\'' + w.localId + '\',' + idx + ')">'
+              + '<img src="' + img + '" alt="หลักฐาน ' + (idx + 1) + '">'
+              + '</div>';
+          }).join('')
+        + '</div></div>';
+    }
+
+    var syncInfo = '';
+    if (srcInfo === 'local') {
+      syncInfo = '<div class="sync-banner ' + (w.syncStatus === 'failed' ? 'sync-banner-failed' : 'sync-banner-pending') + '">'
+        + syncBadgeLabel(w) + (w.lastError ? ' — ' + escapeHtml(w.lastError) : '')
+        + '</div>';
+    }
+
+    var rowIdx = -1;
+    var list = WorkStore.listLocal();
+    for (var i = 0; i < list.length; i++) {
+      if ((w.localId && list[i].localId === w.localId) || (w.workId && list[i].workId === w.workId)) {
+        rowIdx = i;
+        break;
+      }
+    }
+
+    var el = document.getElementById('work-detail-content');
+    el.innerHTML = ''
+      + syncInfo
+      + '<div class="detail-section">'
+      + '  <div class="detail-label">หัวข้อ</div>'
+      + '  <div class="detail-value">' + escapeHtml(w.title || '-') + '</div>'
+      + '</div>'
+      + '<div class="detail-row">'
+      + '  <div class="detail-section">'
+      + '    <div class="detail-label">วันที่</div>'
+      + '    <div class="detail-value">' + escapeHtml(w.workDate || '-') + '</div>'
+      + '  </div>'
+      + '  <div class="detail-section">'
+      + '    <div class="detail-label">หมวดหมู่</div>'
+      + '    <div class="detail-value"><span class="detail-cat">' + escapeHtml(w.category || '-') + '</span></div>'
+      + '  </div>'
+      + '</div>'
+      + '<div class="detail-row">'
+      + '  <div class="detail-section">'
+      + '    <div class="detail-label">เวลาเริ่ม</div>'
+      + '    <div class="detail-value">' + escapeHtml(w.startTime || '-') + '</div>'
+      + '  </div>'
+      + '  <div class="detail-section">'
+      + '    <div class="detail-label">เวลาสิ้นสุด</div>'
+      + '    <div class="detail-value">' + escapeHtml(w.endTime || '-') + '</div>'
+      + '  </div>'
+      + '</div>'
+      + '<div class="detail-section">'
+      + '  <div class="detail-label">สถานที่</div>'
+      + '  <div class="detail-value">' + escapeHtml(w.location || '-') + '</div>'
+      + '</div>'
+      + '<div class="detail-section">'
+      + '  <div class="detail-label">รายละเอียด</div>'
+      + '  <div class="detail-value detail-desc">' + escapeHtml(w.description || '-') + '</div>'
+      + '</div>'
+      + imagesHtml
+      + '<div class="detail-section">'
+      + '  <div class="detail-label">สถานะ</div>'
+      + '  <div class="detail-value"><span class="list-item-badge ' + syncBadgeClass(w) + '">' + escapeHtml(syncBadgeLabel(w)) + '</span></div>'
+      + '</div>'
+      + '<div class="detail-actions">'
+      + '  <button class="btn btn-outline btn-block" onclick="addEvidence(' + rowIdx + ')">📸 แนบหลักฐาน</button>'
+      + '  <button class="btn btn-primary btn-block" onclick="editWork(' + rowIdx + ')">✏️ แก้ไข</button>'
+      + '  <button class="btn btn-danger btn-block" onclick="deleteWork(' + rowIdx + ')">🗑️ ลบ</button>'
+      + '</div>';
+
+    // Re-bind back button
+    document.querySelectorAll('.btn-back').forEach(function(btn) {
+      btn.addEventListener('click', function() { navigateTo(this.dataset.target); });
+    });
+
+    navigateTo('work-detail');
+  }
+
+  if (local && (!local.workId || local.syncStatus === 'pending' || local.syncStatus === 'failed')) {
+    renderDetail(local, 'local');
+    return;
+  }
+
   if (!workId || String(workId).indexOf('L-') === 0) {
-    if (local) showDetail(local, syncBadgeLabel(local));
-    else showToast('ไม่พบรายการ', true);
+    if (local) { renderDetail(local, 'local'); }
+    else { showToast('ไม่พบรายการ', true); }
     return;
   }
 
   API.get('getWorkDetail', { workId: workId }).then(function(w) {
-    showDetail(w, local ? syncBadgeLabel(local) : 'ซิงค์แล้ว');
+    var merged = local ? Object.assign({}, local, {
+      title: w.title || local.title,
+      workDate: w.workDate || local.workDate,
+      category: w.category || local.category,
+      startTime: w.startTime || local.startTime,
+      endTime: w.endTime || local.endTime,
+      location: w.location || local.location,
+      description: w.description || local.description,
+      status: w.status || local.status,
+      hasEvidence: w.hasEvidence,
+      createdAt: w.createdAt || local.createdAt,
+      updatedAt: w.updatedAt || local.updatedAt,
+      originalTranscript: w.originalTranscript || local.originalTranscript,
+      structuredData: w.structuredData || ''
+    }) : Object.assign({}, w, {
+      localId: null,
+      syncStatus: 'synced',
+      evidenceImages: (w.structuredData && tryParseJSON(w.structuredData) && tryParseJSON(w.structuredData).evidenceImages) || []
+    });
+    if (local) WorkStore.upsertLocal(merged);
+    renderDetail(merged, 'server');
+  }).catch(function() {
+    if (local) renderDetail(local, 'local');
+    else showToast('โหลดรายละเอียดไม่สำเร็จ', true);
   });
 }
+
+function tryParseJSON(str) {
+  try { return JSON.parse(str); } catch(e) { return null; }
+}
+
+// ── Edit Work ─────────────────────────────────────────
+
+function editWork(rowIdx) {
+  var list = WorkStore.listLocal();
+  var w = list[rowIdx];
+  if (!w) { showToast('ไม่พบรายการ', true); return; }
+
+  var sc = document.getElementById('screen-work-edit');
+  sc.innerHTML = ''
+    + '<header class="topbar">'
+    + '  <button class="btn-back" data-target="work-detail">←</button>'
+    + '  <h2>แก้ไขงาน</h2>'
+    + '  <div style="width:40px"></div>'
+    + '</header>'
+    + '<form id="edit-form" class="confirm-form">'
+    + '  <div class="form-group">'
+    + '    <label>หัวข้องาน</label>'
+    + '    <input type="text" id="ef-title" value="' + escapeAttr(w.title || '') + '">'
+    + '  </div>'
+    + '  <div class="form-row">'
+    + '    <div class="form-group">'
+    + '      <label>วันที่</label>'
+    + '      <input type="date" id="ef-date" value="' + escapeAttr(w.workDate || '') + '">'
+    + '    </div>'
+    + '    <div class="form-group">'
+    + '      <label>หมวดหมู่</label>'
+    + '      <select id="ef-category">'
+    + '        <option value="">เลือก</option>'
+    + '        <option value="ถ่ายภาพ"' + (w.category === 'ถ่ายภาพ' ? ' selected' : '') + '>ถ่ายภาพ</option>'
+    + '        <option value="วิดีโอ"' + (w.category === 'วิดีโอ' ? ' selected' : '') + '>วิดีโอ</option>'
+    + '        <option value="ประชุม"' + (w.category === 'ประชุม' ? ' selected' : '') + '>ประชุม</option>'
+    + '        <option value="งานเอกสาร"' + (w.category === 'งานเอกสาร' ? ' selected' : '') + '>งานเอกสาร</option>'
+    + '        <option value="ซ่อมบำรุง"' + (w.category === 'ซ่อมบำรุง' ? ' selected' : '') + '>ซ่อมบำรุง</option>'
+    + '      </select>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="form-row">'
+    + '    <div class="form-group">'
+    + '      <label>เวลาเริ่ม</label>'
+    + '      <input type="time" id="ef-start" value="' + escapeAttr(w.startTime || '') + '">'
+    + '    </div>'
+    + '    <div class="form-group">'
+    + '      <label>เวลาสิ้นสุด</label>'
+    + '      <input type="time" id="ef-end" value="' + escapeAttr(w.endTime || '') + '">'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="form-group">'
+    + '    <label>สถานที่</label>'
+    + '    <input type="text" id="ef-location" value="' + escapeAttr(w.location || '') + '">'
+    + '  </div>'
+    + '  <div class="form-group">'
+    + '    <label>รายละเอียด</label>'
+    + '    <textarea id="ef-description" rows="3">' + escapeAttr(w.description || '') + '</textarea>'
+    + '  </div>'
+    + '  <button type="submit" class="btn btn-primary btn-block">บันทึกการแก้ไข</button>'
+    + '</form>';
+
+  document.querySelectorAll('.btn-back').forEach(function(btn) {
+    btn.addEventListener('click', function() { navigateTo(this.dataset.target); });
+  });
+
+  document.getElementById('edit-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    saveWorkEdit(w);
+  });
+
+  navigateTo('work-edit');
+}
+
+function saveWorkEdit(original) {
+  var btn = document.querySelector('#edit-form button[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'กำลังบันทึก...'; }
+
+  var now = new Date().toISOString();
+  var data = {
+    workId: original.workId || '',
+    workDate: document.getElementById('ef-date').value,
+    startTime: document.getElementById('ef-start').value,
+    endTime: document.getElementById('ef-end').value,
+    location: document.getElementById('ef-location').value,
+    category: document.getElementById('ef-category').value,
+    title: document.getElementById('ef-title').value,
+    description: document.getElementById('ef-description').value
+  };
+
+  var local = Object.assign({}, original, data, {
+    updatedAt: now,
+    syncStatus: original.workId ? 'pending' : original.syncStatus,
+    evidenceImages: original.evidenceImages || []
+  });
+
+  WorkStore.upsertLocal(local);
+
+  if (local.workId) {
+    WorkStore.enqueue({
+      opId: 'OP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      type: 'updateWork',
+      localId: local.localId || local.workId,
+      payload: data,
+      attempts: 0,
+      lastError: null
+    });
+    showToast('บันทึกการแก้ไข — กำลังซิงค์');
+    SyncWorker.flush();
+  } else {
+    showToast('แก้ไขบนเครื่องแล้ว');
+  }
+
+  navigateTo('history');
+  loadHistory();
+}
+
+// ── Delete Work ───────────────────────────────────────
+
+function deleteWork(rowIdx) {
+  var list = WorkStore.listLocal();
+  var w = list[rowIdx];
+  if (!w) { showToast('ไม่พบรายการ', true); return; }
+
+  if (!confirm('ลบรายการ "' + (w.title || '(ไม่มีชื่อ)') + '" ?\\nการลบจะซิงค์เมื่อมีเน็ต')) return;
+
+  var localId = w.localId || w.workId;
+
+  if (w.workId) {
+    WorkStore.enqueue({
+      opId: 'OP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      type: 'deleteWork',
+      localId: w.workId,
+      payload: { workId: w.workId },
+      attempts: 0,
+      lastError: null
+    });
+    WorkStore.removeLocal(localId);
+    showToast('ลบแล้ว — กำลังซิงค์');
+    SyncWorker.flush();
+  } else {
+    WorkStore.removeLocal(localId);
+    showToast('ลบบนเครื่องแล้ว');
+  }
+
+  navigateTo('history');
+  loadHistory();
+}
+
+// ── Evidence (Photo) ──────────────────────────────────
+
+var ViewEvidence = {
+  expand: function(localId, idx) {
+    var w = WorkStore.getByLocalId(localId) || WorkStore.getByWorkId(localId);
+    if (!w || !w.evidenceImages || !w.evidenceImages[idx]) return;
+    var src = w.evidenceImages[idx];
+    var overlay = document.createElement('div');
+    overlay.className = 'evidence-overlay';
+    overlay.innerHTML = '<img src="' + src + '" style="max-width:95vw;max-height:90vh;border-radius:8px">';
+    overlay.onclick = function() { overlay.remove(); };
+    document.body.appendChild(overlay);
+  }
+};
+
+function addEvidence(rowIdx) {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+
+  input.onchange = function() {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    compressAndSaveEvidence(file, rowIdx);
+  };
+
+  var useCamera = confirm('ใช้กล้องถ่ายรูปตอนนี้?\\nOK = กล้อง | Cancel = เลือกจากแกลเลอรี');
+  if (useCamera) {
+    input.setAttribute('capture', 'environment');
+  }
+  input.click();
+}
+
+function compressAndSaveEvidence(file, rowIdx) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var maxW = 800;
+      var scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var base64 = canvas.toDataURL('image/jpeg', 0.7);
+
+      var list = WorkStore.listLocal();
+      if (rowIdx < 0 || rowIdx >= list.length) { showToast('ไม่พบรายการ', true); return; }
+      var w = list[rowIdx];
+      if (!w.evidenceImages) w.evidenceImages = [];
+      w.evidenceImages.push(base64);
+      w.hasEvidence = true;
+      w.syncStatus = w.workId ? 'pending' : w.syncStatus;
+      w.updatedAt = new Date().toISOString();
+      WorkStore.upsertLocal(w);
+
+      if (w.workId) {
+        WorkStore.enqueue({
+          opId: 'OP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+          type: 'updateWork',
+          localId: w.localId || w.workId,
+          payload: {
+            workId: w.workId,
+            title: w.title,
+            workDate: w.workDate,
+            category: w.category,
+            startTime: w.startTime,
+            endTime: w.endTime,
+            location: w.location,
+            description: w.description,
+            structured: { evidenceImages: w.evidenceImages }
+          },
+          attempts: 0,
+          lastError: null
+        });
+        showToast('แนบหลักฐานแล้ว — กำลังซิงค์');
+        SyncWorker.flush();
+      } else {
+        showToast('แนบหลักฐานบนเครื่องแล้ว');
+      }
+
+      navigateTo('history');
+      loadHistory();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Helpers ───────────────────────────────────────────
 
 function escapeHtml(str) {
   if (!str) return '';
