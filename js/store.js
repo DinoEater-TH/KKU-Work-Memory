@@ -2,6 +2,16 @@
 // store.js — Local work cache + sync queue (localStorage)
 // ============================================================
 
+function tokenIsValid(token) {
+  try {
+    var parts = token.split('.');
+    var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return payload.exp && payload.exp * 1000 > Date.now();
+  } catch(e) {
+    return false;
+  }
+}
+
 var WorkStore = {
   KEY_WORKS: 'kku_works',
   KEY_QUEUE: 'kku_sync_queue',
@@ -185,7 +195,10 @@ var SyncWorker = {
   flush: function() {
     if (this._busy) return;
     if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
-    if (!API.getToken()) return;
+
+    var token = API.getToken();
+    if (!token) return;
+    if (!tokenIsValid(token)) return;
 
     var ops = WorkStore.pendingOps();
     if (!ops.length) return;
