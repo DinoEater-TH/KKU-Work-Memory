@@ -1,480 +1,150 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>KKU WORK MEMORY</title>
-<style>
-  :root{--bg:#f2f4fb;--card:#fff;--primary:#4f46e5;--primary2:#6366f1;--dark:#1f2333;--muted:#6b7280;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--radius:18px;--shadow:0 6px 18px rgba(31,35,51,.08);}
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--dark);}
-  #app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:78px;position:relative;}
-  header.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;position:sticky;top:0;z-index:20;}
-  header.topbar h1{font-size:17px;margin:0;}
-  header.topbar span.tag{font-size:11px;opacity:.85;display:block;}
-  .iconbtn{background:rgba(255,255,255,.18);border:none;color:#fff;width:36px;height:36px;border-radius:10px;font-size:16px;cursor:pointer;}
-  .xppill{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;border:none;color:#fff;}
-  main{padding:16px;}
-  .view{display:none;animation:fadeIn .25s ease;}
-  .view.active{display:block;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-  .home-title{text-align:center;margin:6px 0 22px;font-size:15px;color:var(--muted);}
-  .mic-wrap{display:flex;flex-direction:column;align-items:center;margin:20px 0 26px;}
-  #micBtn{width:130px;height:130px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-size:46px;box-shadow:0 10px 30px rgba(79,70,229,.4);cursor:pointer;}
-  #micBtn:active{transform:scale(.95);}
-  .mic-caption{margin-top:12px;color:var(--muted);font-size:13px;}
-  .quickgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
-  .quickbtn{background:var(--card);border:none;border-radius:var(--radius);padding:16px 8px;box-shadow:var(--shadow);font-size:14px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--dark);}
-  .quickbtn .ic{font-size:26px;}
-  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
-  .card h3{margin:0 0 8px;font-size:15px;}
-  .row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
-  .backbtn{background:none;border:none;color:var(--primary);font-size:14px;cursor:pointer;padding:0;font-weight:600;}
-  .field{margin-bottom:12px;}
-  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
-  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #e2e5ec;border-radius:12px;font-size:14px;background:#fbfbfe;font-family:inherit;}
-  .field textarea{resize:vertical;min-height:70px;}
-  .btn{width:100%;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
-  .btn-primary{background:var(--primary);color:#fff;}
-  .btn-secondary{background:#eef0fb;color:var(--primary);}
-  .btn-ghost{background:transparent;color:var(--muted);border:1px solid #e2e5ec;}
-  .btn-row{display:flex;gap:8px;}
-  .btn-row .btn{flex:1;}
-  .listen-status{text-align:center;font-size:14px;color:var(--primary);font-weight:700;margin-bottom:14px;}
-  .wave{display:flex;justify-content:center;align-items:center;gap:6px;height:60px;margin-bottom:18px;}
-  .wave span{width:6px;height:14px;background:var(--primary);border-radius:4px;}
-  .wave.on span{animation:bar .9s ease-in-out infinite;}
-  .wave span:nth-child(2){animation-delay:.1s;} .wave span:nth-child(3){animation-delay:.2s;}
-  .wave span:nth-child(4){animation-delay:.3s;} .wave span:nth-child(5){animation-delay:.4s;}
-  @keyframes bar{0%,100%{height:14px;}50%{height:48px;}}
-  .evidence-thumb{width:64px;height:64px;object-fit:cover;border-radius:10px;margin-right:6px;border:1px solid #e2e5ec;}
-  .evidence-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
-  .evidence-item{position:relative;}
-  .evidence-item .rm{position:absolute;top:-6px;right:-2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;}
-  .chip{display:inline-block;background:#eef0fb;color:var(--primary);font-size:12px;padding:4px 10px;border-radius:999px;margin:2px 4px 2px 0;position:relative;padding-right:22px;}
-  .filterbar{display:flex;gap:8px;margin-bottom:12px;}
-  .filterbar select,.filterbar input{flex:1;padding:9px 10px;border-radius:10px;border:1px solid #e2e5ec;font-size:13px;}
-  .log-card{border-left:4px solid var(--primary);}
-  .log-card .meta{font-size:12px;color:var(--muted);}
-  .log-card .exp{color:var(--success);font-weight:700;font-size:12px;}
-  .progress-outer{background:#e9ebf5;border-radius:999px;height:10px;overflow:hidden;margin:6px 0 4px;}
-  .progress-inner{background:linear-gradient(90deg,var(--primary),var(--accent));height:100%;border-radius:999px;transition:width .4s;}
-  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .stat-box{background:#f7f8fd;border-radius:12px;padding:10px;text-align:center;}
-  .stat-box b{display:block;font-size:20px;color:var(--primary);}
-  .stat-box span{font-size:11px;color:var(--muted);}
-  .badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
-  .badge{text-align:center;font-size:11px;color:var(--muted);opacity:.35;}
-  .badge.earned{opacity:1;color:var(--dark);font-weight:600;}
-  .badge .bic{font-size:26px;display:block;}
-  .bottomnav{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:#fff;border-top:1px solid #e6e8f0;display:flex;z-index:30;}
-  .navbtn{flex:1;background:none;border:none;padding:10px 4px;font-size:11px;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;}
-  .navbtn .ic{font-size:20px;}
-  .navbtn.active{color:var(--primary);font-weight:700;}
-  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;z-index:100;opacity:0;transition:opacity .25s;box-shadow:var(--shadow);white-space:nowrap;}
-  .toast.show{opacity:1;}
-  .note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;}
-  .hidden{display:none!important;}
-  fieldset{border:1px dashed #d8dbe8;border-radius:12px;margin-top:6px;padding:10px;}
-  legend{font-size:12px;color:var(--primary);font-weight:700;padding:0 4px;}
-  #view-login{padding-top:60px;}
-  #view-login .card{text-align:center;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a56db">
+  <title>KKU Memory</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-<div id="app">
 
-  <header class="topbar">
-    <div><h1>🧠 KKU WORK MEMORY</h1><span class="tag">พูดไว้วันนี้…ไม่ต้องจำเองในวันหน้า</span></div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="xppill" id="xpPillBtn" type="button">Lv.1 ⭐0</button>
+  <!-- ── Login Screen ── -->
+  <div id="screen-login" class="screen active">
+    <div class="login-container">
+      <div class="login-logo">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="16" fill="#1a56db"/>
+          <path d="M20 44V20L44 32L20 44Z" fill="white"/>
+        </svg>
+      </div>
+      <h1>KKU Memory</h1>
+      <p class="login-subtitle">บันทึกด้วยเสียง จำได้ทุกงาน</p>
+      <div class="login-card">
+        <div class="login-domain">@kku.ac.th</div>
+        <p class="login-hint">เข้าสู่ระบบด้วยบัญชีมหาวิทยาลัย</p>
+        <div id="gsi-button" class="gsi-btn">
+          <div class="gsi-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+          </div>
+          <span>Sign in with Google</span>
+        </div>
+      </div>
+      <div id="login-error" class="login-error hidden"></div>
     </div>
-  </header>
+  </div>
 
-  <main>
+  <!-- ── Notification Screen ── -->
+  <div id="screen-notification" class="screen">
+    <div class="notif-container">
+      <div class="notif-icon">🔔</div>
+      <h2 id="notif-title"></h2>
+      <p id="notif-message"></p>
+      <button id="notif-acknowledge" class="btn btn-primary">รับทราบ</button>
+    </div>
+  </div>
 
-    <!-- LOGIN -->
-    <section class="view active" id="view-login">
-      <div class="card">
-        <h3>เข้าสู่ระบบ</h3>
-        <div class="field"><label>อีเมล (มข.)</label><input type="email" id="loginEmail" placeholder="somchai@kku.ac.th"></div>
-        <button class="btn btn-primary" id="loginBtn" type="button">เข้าสู่ระบบ</button>
-      </div>
-    </section>
+  <!-- ── Home Screen ── -->
+  <div id="screen-home" class="screen">
+    <header class="topbar">
+      <h2 class="topbar-title">KKU Memory</h2>
+      <div class="topbar-exp" id="exp-badge">0 EXP</div>
+    </header>
 
-    <!-- HOME -->
-    <section class="view" id="view-home">
-      <p class="home-title">วันนี้คุณทำอะไร?</p>
-      <div class="mic-wrap">
-        <button id="micBtn" type="button">🎙️</button>
-        <div class="mic-caption">กดเพื่อพูดบันทึกงาน</div>
-      </div>
-      <div class="quickgrid">
-        <button class="quickbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
-        <button class="quickbtn" data-nav="profile"><span class="ic">👤</span>โปรไฟล์</button>
-      </div>
-    </section>
-
-    <!-- CAPTURE -->
-    <section class="view" id="view-capture">
-      <button class="backbtn" data-nav="home">‹ กลับ</button>
-      <div class="card">
-        <div class="listen-status" id="listenStatus">แตะปุ่มเพื่อเริ่มพูด</div>
-        <div class="wave" id="waveBox"><span></span><span></span><span></span><span></span><span></span></div>
-        <textarea id="transcriptBox" placeholder="พิมพ์หรือพูดสิ่งที่คุณทำวันนี้"></textarea>
-        <div class="btn-row" style="margin-top:10px;">
-          <button class="btn btn-secondary" id="toggleListenBtn" type="button">🎙️ เริ่มพูด</button>
-          <button class="btn btn-primary" id="analyzeBtn" type="button">🧠 วิเคราะห์</button>
+    <main class="home-content">
+      <div class="home-actions">
+        <button id="btn-record" class="btn-home primary">
+          <span class="icon">🎤</span> บันทึกงาน
+        </button>
+        <div class="home-grid">
+          <button id="btn-search" class="btn-home">
+            <span class="icon">🔍</span> ค้นหา
+          </button>
+          <button id="btn-history" class="btn-home">
+            <span class="icon">📋</span> ประวัติ
+          </button>
+          <button id="btn-problems" class="btn-home">
+            <span class="icon">⚠️</span> ปัญหา
+          </button>
+          <button id="btn-knowledge" class="btn-home">
+            <span class="icon">📚</span> ความรู้
+          </button>
         </div>
       </div>
-    </section>
+    </main>
 
-    <!-- PREVIEW -->
-    <section class="view" id="view-preview">
-      <button class="backbtn" data-nav="capture">‹ แก้ไขข้อความ</button>
-      <div class="card">
-        <h3>✅ ตรวจสอบก่อนบันทึก</h3>
-        <div class="field"><label>ประเภทงาน</label><select id="pv-category"></select></div>
-        <div class="field"><label>วันที่</label><input type="date" id="pv-date"></div>
-        <div class="field"><label>เวลา</label><input type="text" id="pv-time"></div>
-        <div class="field"><label>สถานที่</label><input type="text" id="pv-location"></div>
-        <div class="field"><label>ผู้เกี่ยวข้อง</label><input type="text" id="pv-people"></div>
-        <div class="field"><label>รายละเอียด</label><textarea id="pv-detail"></textarea></div>
-        <div class="field"><label>คำสำคัญ</label><input type="text" id="pv-keywords"></div>
-        <fieldset id="pv-problem-fs">
-          <legend>🛠 บันทึกการแก้ปัญหา</legend>
-          <div class="field"><label>สาเหตุที่พบ</label><textarea id="pv-cause"></textarea></div>
-          <div class="field"><label>วิธีแก้</label><textarea id="pv-solution"></textarea></div>
-          <div class="field"><label>ผลลัพธ์</label><textarea id="pv-result"></textarea></div>
-        </fieldset>
-      </div>
-      <button class="btn btn-primary" id="confirmSaveBtn" type="button">✅ ยืนยัน & บันทึก</button>
-    </section>
+    <nav class="bottombar">
+      <button class="nav-btn active" data-screen="home">🏠 หน้าแรก</button>
+      <button class="nav-btn" data-screen="history">📋 ประวัติ</button>
+      <button class="nav-btn" data-screen="search">🔍 ค้นหา</button>
+      <button class="nav-btn" data-screen="profile">👤 โปรไฟล์</button>
+    </nav>
+  </div>
 
-    <!-- EVIDENCE -->
-    <section class="view" id="view-evidence">
-      <div class="card">
-        <h3>📷 ต้องการเพิ่มหลักฐานหรือไม่?</h3>
-        <div class="evidence-list" id="evidenceList"></div>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
-        <input type="file" id="galleryInput" accept="image/*" class="hidden">
-        <div class="btn-row">
-          <button class="btn btn-secondary" id="takePhotoBtn" type="button">📷 ถ่ายรูป</button>
-          <button class="btn btn-secondary" id="pickPhotoBtn" type="button">📁 เลือกรูป</button>
-        </div>
-        <button class="btn btn-ghost" id="addLinkBtn" type="button" style="margin-top:8px;">🔗 เพิ่มลิงก์ผลงาน</button>
-        <button class="btn btn-primary" id="finishEvidenceBtn" type="button" style="margin-top:14px;">เสร็จสิ้น</button>
-        <button class="btn btn-ghost" id="skipEvidenceBtn" type="button">⏭ ข้ามไปก่อน</button>
-      </div>
-    </section>
+  <!-- ── Transcript Screen ── -->
+  <div id="screen-transcript" class="screen">
+    <!-- filled by JS -->
+  </div>
 
-    <!-- HISTORY -->
-    <section class="view" id="view-history">
-      <h3 style="margin-top:0;">📚 ประวัติของฉัน</h3>
-      <div class="filterbar">
-        <select id="histCategoryFilter"><option value="">ทุกประเภท</option></select>
-        <input type="text" id="histKeywordFilter" placeholder="ค้นหา...">
-      </div>
-      <div id="historyList"><p class="note">กำลังโหลด...</p></div>
-    </section>
+  <!-- ── History Screen ── -->
+  <div id="screen-history" class="screen">
+    <header class="topbar">
+      <button class="btn-back" data-target="home">←</button>
+      <h2>ประวัติงาน</h2>
+      <div style="width:40px"></div>
+    </header>
+    <div id="history-list" class="list-container"></div>
+  </div>
 
-    <!-- PROFILE -->
-    <section class="view" id="view-profile">
-      <h3 style="margin-top:0;">👤 Work Profile</h3>
-      <div class="card">
-        <div class="row"><b id="profLevelName">Level 1</b><span id="profExp">0 EXP</span></div>
-        <div class="progress-outer"><div class="progress-inner" id="profBar" style="width:0%"></div></div>
-        <div style="font-size:11px;color:var(--muted);" id="profNext"></div>
-      </div>
-      <div class="card">
-        <h3>📊 สถิติ</h3>
-        <div class="stat-grid">
-          <div class="stat-box"><b id="statLogs">0</b><span>บันทึกงาน</span></div>
-          <div class="stat-box"><b id="statProblems">0</b><span>แก้ปัญหา</span></div>
-          <div class="stat-box"><b id="statKnowledge">0</b><span>Knowledge</span></div>
-          <div class="stat-box"><b id="statHelpful">0</b><span>ช่วยได้</span></div>
-        </div>
-      </div>
-      <div class="card"><h3>🏅 Badges</h3><div class="badge-grid" id="badgeGrid"></div></div>
-      <div class="card"><h3>📆 สรุปเดือนนี้</h3><div id="monthSummary"></div></div>
-    </section>
+  <!-- ── Search Screen ── -->
+  <div id="screen-search" class="screen">
+    <header class="topbar">
+      <button class="btn-back" data-target="home">←</button>
+      <h2>ค้นหาความรู้</h2>
+      <div style="width:40px"></div>
+    </header>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="ค้นหาปัญหาหรือวิธีแก้..." autocomplete="off">
+    </div>
+    <div id="search-results" class="list-container"></div>
+  </div>
 
-  </main>
+  <!-- ── Problem Detail Screen ── -->
+  <div id="screen-problem-detail" class="screen">
+    <header class="topbar">
+      <button class="btn-back" data-target="search">←</button>
+      <h2>รายละเอียด</h2>
+      <div style="width:40px"></div>
+    </header>
+    <div id="problem-detail-content" class="detail-container"></div>
+  </div>
 
-  <nav class="bottomnav hidden" id="bottomNav">
-    <button class="navbtn active" data-nav="home"><span class="ic">🏠</span>หน้าแรก</button>
-    <button class="navbtn" data-nav="history"><span class="ic">📚</span>ประวัติ</button>
-    <button class="navbtn" data-nav="profile"><span class="ic">👤</span>โปรไฟล์</button>
-  </nav>
+  <!-- ── Profile Screen ── -->
+  <div id="screen-profile" class="screen">
+    <header class="topbar">
+      <button class="btn-back" data-target="home">←</button>
+      <h2>โปรไฟล์</h2>
+      <button id="btn-logout" class="btn-text">ออก</button>
+    </header>
+    <div id="profile-content" class="profile-container"></div>
+  </div>
 
-  <div class="toast" id="toast"></div>
-</div>
+  <!-- ── Toast ── -->
+  <div id="toast" class="toast hidden"></div>
 
-<script>
-(function(){
-'use strict';
+  <!-- ── Loading Overlay ── -->
+  <div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+  </div>
 
-/* ตั้งค่า API URL ของ Google Apps Script ที่ Deploy แล้ว */
-const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbxiD92TmykqPsf9UbNH3I4JCiur2phMJXxljeUJ0GslMKPlFhzLv_tQQzXKVfM6Djs/exec',
-  CATEGORIES: [
-    {id:'photography', name:'งานถ่ายภาพ', icon:'📸', evidence:true, kws:['ถ่ายภาพ','ถ่ายรูป','ภาพถ่าย','กล้อง']},
-    {id:'video', name:'งานวิดีโอ', icon:'🎥', evidence:true, kws:['ถ่ายวิดีโอ','วิดีโอ']},
-    {id:'meeting', name:'งานประชุม', icon:'🗣️', evidence:true, kws:['ประชุม']},
-    {id:'event', name:'งานจัดกิจกรรม', icon:'🎪', evidence:true, kws:['กิจกรรม','จัดงาน']},
-    {id:'problem', name:'ปัญหา/แก้ปัญหา', icon:'🛠️', evidence:false, kws:['ปัญหา','เสีย','ไม่ได้','พัง','ไม่ขึ้น','ไม่มีภาพ']},
-    {id:'document', name:'งานเอกสาร', icon:'📄', evidence:false, kws:['เอกสาร','รายงาน']},
-    {id:'other', name:'งานอื่นๆ', icon:'📌', evidence:false, kws:[]}
-  ]
-};
-
-const state = { currentUser:null, currentDraft:null, currentEvidence:[], currentWorkLogId:null, isListening:false };
-
-const $ = s=>document.querySelector(s);
-const $all = s=>document.querySelectorAll(s);
-let toastTimer=null;
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
-function catInfo(id){ return CONFIG.CATEGORIES.find(c=>c.id===id) || CONFIG.CATEGORIES[CONFIG.CATEGORIES.length-1]; }
-function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function formatDateThai(iso){
-  if(!iso) return 'ไม่พบข้อมูล';
-  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  const d=new Date(iso+'T00:00:00'); if(isNaN(d)) return iso;
-  return d.getDate()+' '+months[d.getMonth()]+' '+(d.getFullYear()+543);
-}
-
-/* ===== เรียก Backend ===== */
-async function apiGet(action, params){
-  const qs = new URLSearchParams({action, ...params}).toString();
-  const res = await fetch(CONFIG.API_URL+'?'+qs);
-  return res.json();
-}
-async function apiPost(action, params){
-  const res = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({action, ...params}) });
-  return res.json();
-}
-
-/* ===== Login ===== */
-$('#loginBtn').addEventListener('click', ()=>{
-  const email = $('#loginEmail').value.trim();
-  if(!email || !email.includes('@')){ toast('กรุณากรอกอีเมลให้ถูกต้อง'); return; }
-  state.currentUser = { email };
-  localStorage.setItem('kku_user_email', email);
-  $('#bottomNav').classList.remove('hidden');
-  showView('home');
-});
-
-/* ===== Navigation ===== */
-function showView(name){
-  $all('.view').forEach(v=>v.classList.remove('active'));
-  $('#view-'+name).classList.add('active');
-  $all('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.nav===name));
-  if(name==='history') loadHistory();
-  if(name==='profile') loadProfile();
-  if(name==='home') resetCaptureUI();
-}
-document.addEventListener('click', e=>{
-  const nav = e.target.closest('[data-nav]');
-  if(nav) showView(nav.dataset.nav);
-});
-$('#xpPillBtn').addEventListener('click', ()=> showView('profile'));
-
-/* ===== AI วิเคราะห์แบบง่าย (Rule-based) ===== */
-const AI = {
-  detectCategory(text){ for(const c of CONFIG.CATEGORIES){ if(c.kws.some(k=>text.includes(k))) return c; } return catInfo('other'); },
-  extractLocation(text){ const m=text.match(/ที่\s*([^\s,.]+(?:\s+[^\s,.]+){0,4})/); return m ? m[1].split(/ตอน|เวลา|แล้ว|และ/)[0].trim() : null; },
-  extractPeople(text){ const m=text.match(/กับ\s*([^\s,.]+(?:\s+[^\s,.]+){0,3})/); return m ? m[1].split(/ที่|แล้ว/)[0].trim() : null; },
-  extractTime(text){
-    let m=text.match(/\d{1,2}[:.]\d{2}/); if(m) return m[0];
-    m=text.match(/(\d{1,2})\s?โมง/); if(m) return m[1]+':00';
-    const words={'เก้าโมงเช้า':'09:00','แปดโมงเช้า':'08:00','สิบโมงเช้า':'10:00','บ่ายโมง':'13:00'};
-    for(const w in words){ if(text.includes(w)) return words[w]; } return null;
-  },
-  extractKeywords(text){
-    const stop=['และ','ที่','ไป','มา','ได้','ให้','ของ','ใน','เป็น','แล้ว','ตอน','กับ','จาก'];
-    return [...new Set(text.split(/\s+/).filter(w=>w.length>=3 && !stop.includes(w)))].slice(0,6);
-  },
-  extractProblem(text){
-    const c=text.match(/(?:เพราะ|เนื่องจาก|สาเหตุ(?:คือ|มาจาก)?)\s*([^.。]+)/);
-    const s=text.match(/(?:ลองเปลี่ยน|เปลี่ยนเป็น|แก้โดย|วิธีแก้คือ)\s*([^.。]+)/);
-    const r=text.match(/(?:สุดท้าย|ทำให้|จึง|กลับมาใช้งานได้)\s*([^.。]*)/);
-    return { cause:c?c[1].trim():'ไม่พบข้อมูล', solution:s?s[1].trim():'ไม่พบข้อมูล', result:r?(r[1].trim()||'ไม่พบข้อมูล'):'ไม่พบข้อมูล' };
-  },
-  analyze(text){
-    text=(text||'').trim(); if(!text) return null;
-    const cat=this.detectCategory(text);
-    return {
-      category:cat.id, date:todayISO(), time:this.extractTime(text)||'ไม่พบข้อมูล',
-      location:this.extractLocation(text)||'ไม่พบข้อมูล', people:this.extractPeople(text)||'ไม่พบข้อมูล',
-      detail:text, keywords:this.extractKeywords(text), problem: cat.id==='problem'? this.extractProblem(text):null
-    };
-  }
-};
-
-/* ===== Speech ===== */
-const Speech = { recognition:null, supported: !!(window.SpeechRecognition||window.webkitSpeechRecognition),
-  init(){ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R) return;
-    this.recognition=new R(); this.recognition.lang='th-TH'; this.recognition.continuous=true; this.recognition.interimResults=true;
-    this.recognition.onresult=(e)=>{ let t=''; for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript; $('#transcriptBox').value=t; };
-    this.recognition.onerror=()=>{ toast('⚠️ ใช้เสียงไม่ได้ กรุณาพิมพ์แทน'); this.stop(); };
-  },
-  start(){ if(!this.recognition) return false; try{ this.recognition.start(); return true; }catch(e){ return false; } },
-  stop(){ if(this.recognition) try{ this.recognition.stop(); }catch(e){} }
-};
-Speech.init();
-
-function resetCaptureUI(){
-  $('#transcriptBox').value='';
-  $('#listenStatus').textContent = Speech.supported ? 'แตะปุ่มเพื่อเริ่มพูด' : 'เบราว์เซอร์นี้พิมพ์ข้อความได้อย่างเดียว';
-  $('#waveBox').classList.remove('on');
-  $('#toggleListenBtn').textContent='🎙️ เริ่มพูด';
-  $('#toggleListenBtn').disabled=!Speech.supported;
-  state.isListening=false;
-}
-$('#micBtn').addEventListener('click', ()=> showView('capture'));
-$('#toggleListenBtn').addEventListener('click', ()=>{
-  if(!state.isListening){
-    if(!Speech.start()){ toast('⚠️ เข้าไมค์ไม่ได้'); return; }
-    state.isListening=true; $('#listenStatus').textContent='🎙️ กำลังฟัง...'; $('#waveBox').classList.add('on'); $('#toggleListenBtn').textContent='⏹ หยุดพูด';
-  } else { Speech.stop(); state.isListening=false; $('#toggleListenBtn').textContent='🎙️ เริ่มพูด'; }
-});
-$('#analyzeBtn').addEventListener('click', ()=>{
-  const text = $('#transcriptBox').value.trim();
-  if(!text){ toast('กรุณาพูดหรือพิมพ์ข้อความก่อน'); return; }
-  if(state.isListening){ Speech.stop(); state.isListening=false; }
-  state.currentDraft = AI.analyze(text);
-  state.currentEvidence = [];
-  fillPreview(state.currentDraft);
-  showView('preview');
-});
-
-function fillPreview(d){
-  $('#pv-category').innerHTML = CONFIG.CATEGORIES.map(c=>`<option value="${c.id}" ${c.id===d.category?'selected':''}>${c.icon} ${c.name}</option>`).join('');
-  $('#pv-date').value=d.date; $('#pv-time').value=d.time; $('#pv-location').value=d.location;
-  $('#pv-people').value=d.people; $('#pv-detail').value=d.detail; $('#pv-keywords').value=(d.keywords||[]).join(', ');
-  $('#pv-problem-fs').classList.toggle('hidden', d.category!=='problem');
-  if(d.problem){ $('#pv-cause').value=d.problem.cause; $('#pv-solution').value=d.problem.solution; $('#pv-result').value=d.problem.result; }
-}
-$('#pv-category').addEventListener('change', e=> $('#pv-problem-fs').classList.toggle('hidden', e.target.value!=='problem'));
-
-$('#confirmSaveBtn').addEventListener('click', async ()=>{
-  const category = $('#pv-category').value;
-  const draft = {
-    email: state.currentUser.email, category,
-    date: $('#pv-date').value||todayISO(), time: $('#pv-time').value||'ไม่พบข้อมูล',
-    location: $('#pv-location').value||'ไม่พบข้อมูล', people: $('#pv-people').value||'ไม่พบข้อมูล',
-    detail: $('#pv-detail').value, keywords: $('#pv-keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
-    problemCause: category==='problem'? ($('#pv-cause').value||'ไม่พบข้อมูล'):'',
-    problemSolution: category==='problem'? ($('#pv-solution').value||'ไม่พบข้อมูล'):'',
-    problemResult: category==='problem'? ($('#pv-result').value||'ไม่พบข้อมูล'):''
-  };
-  toast('⏳ กำลังบันทึก...');
-  const res = await apiPost('saveWorkLog', draft);
-  if(!res.success){ toast('❌ บันทึกไม่สำเร็จ: '+(res.error||'')); return; }
-  state.currentWorkLogId = res.workLogId;
-  toast('🎉 +'+res.expGained+' EXP');
-  if(catInfo(category).evidence){
-    $('#evidenceList').innerHTML=''; state.currentEvidence=[]; showView('evidence');
-  } else {
-    showView('history');
-  }
-});
-
-/* ===== Evidence (เชื่อม Google Drive จริง) ===== */
-function fileToBase64(file){
-  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result.split(',')[1]); r.onerror=reject; r.readAsDataURL(file); });
-}
-async function uploadEvidence(file){
-  toast('⏳ กำลังอัปโหลดรูปภาพ...');
-  try{
-    const base64 = await fileToBase64(file);
-    const res = await apiPost('uploadEvidenceImage', { base64Data:base64, mimeType:file.type||'image/jpeg', workLogId:state.currentWorkLogId, email:state.currentUser.email });
-    if(res.success){ toast('✅ อัปโหลดสำเร็จ'); return { type:'image', url:res.thumbnailUrl }; }
-    toast('❌ อัปโหลดไม่สำเร็จ: '+(res.error||'')); return null;
-  }catch(e){ toast('❌ อัปโหลดล้มเหลว ตรวจสอบอินเทอร์เน็ต'); return null; }
-}
-async function addLink(url){
-  const res = await apiPost('addEvidenceLink', { url, workLogId:state.currentWorkLogId, email:state.currentUser.email });
-  if(res.success){ toast('✅ เพิ่มลิงก์สำเร็จ'); return { type:'link', url }; }
-  toast('❌ เพิ่มลิงก์ไม่สำเร็จ'); return null;
-}
-function renderEvidenceList(){
-  const box=$('#evidenceList');
-  box.innerHTML = state.currentEvidence.map((ev,i)=>{
-    if(ev.type==='image') return `<div class="evidence-item"><img class="evidence-thumb" src="${ev.url}"><button class="rm" data-idx="${i}">✕</button></div>`;
-    return `<div class="chip">🔗 ${ev.url.slice(0,20)}...<button class="rm" data-idx="${i}" style="position:absolute;top:-6px;right:-2px;">✕</button></div>`;
-  }).join('') || '<span style="font-size:12px;color:var(--muted);">ยังไม่มีหลักฐาน</span>';
-  box.querySelectorAll('.rm').forEach(btn=> btn.addEventListener('click', ()=>{ state.currentEvidence.splice(Number(btn.dataset.idx),1); renderEvidenceList(); }));
-}
-$('#takePhotoBtn').addEventListener('click', ()=> $('#cameraInput').click());
-$('#pickPhotoBtn').addEventListener('click', ()=> $('#galleryInput').click());
-$('#cameraInput').addEventListener('change', async e=>{ const f=e.target.files[0]; if(!f) return; const ev=await uploadEvidence(f); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } e.target.value=''; });
-$('#galleryInput').addEventListener('change', async e=>{ const f=e.target.files[0]; if(!f) return; const ev=await uploadEvidence(f); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } e.target.value=''; });
-$('#addLinkBtn').addEventListener('click', async ()=>{ const url=prompt('วางลิงก์ผลงาน'); if(!url||!url.trim()) return; const ev=await addLink(url.trim()); if(ev){ state.currentEvidence.push(ev); renderEvidenceList(); } });
-$('#finishEvidenceBtn').addEventListener('click', ()=>{ toast('✅ บันทึกงานสมบูรณ์!'); showView('history'); });
-$('#skipEvidenceBtn').addEventListener('click', ()=>{ showView('history'); });
-
-/* ===== History ===== */
-function fillHistoryFilter(){ $('#histCategoryFilter').innerHTML='<option value="">ทุกประเภท</option>'+CONFIG.CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join(''); }
-let historyCache=[];
-async function loadHistory(){
-  fillHistoryFilter();
-  $('#historyList').innerHTML='<p class="note">กำลังโหลด...</p>';
-  const res = await apiGet('getHistory', { email: state.currentUser.email });
-  if(!res.success){ $('#historyList').innerHTML='<p class="note">โหลดไม่สำเร็จ</p>'; return; }
-  historyCache = res.logs;
-  renderHistory();
-}
-function renderHistory(){
-  const catF=$('#histCategoryFilter').value, kwF=$('#histKeywordFilter').value.trim().toLowerCase();
-  let list = historyCache.slice();
-  if(catF) list=list.filter(w=>w.category===catF);
-  if(kwF) list=list.filter(w=>(w.detail+w.location+(w.keywords||[]).join(' ')).toLowerCase().includes(kwF));
-  const box=$('#historyList');
-  if(list.length===0){ box.innerHTML='<p class="note">ยังไม่มีรายการ</p>'; return; }
-  box.innerHTML = list.map(w=>{
-    const c=catInfo(w.category);
-    const prob = w.problemSolution ? `<div style="margin-top:8px;font-size:13px;"><b>สาเหตุ:</b> ${w.problemCause}<b>วิธีแก้:</b> ${w.problemSolution}<b>ผลลัพธ์:</b> ${w.problemResult}</div>` : '';
-    return `<div class="card log-card">
-      <div class="row"><b>${c.icon} ${c.name}</b><span class="exp">+${w.exp} EXP</span></div>
-      <div class="meta">${formatDateThai(w.date)} • ${w.time} • 📍${w.location}</div>
-      <p style="margin:8px 0 0;font-size:14px;">${w.detail}</p>${prob}
-    </div>`;
-  }).join('');
-}
-$('#histCategoryFilter').addEventListener('change', renderHistory);
-$('#histKeywordFilter').addEventListener('input', renderHistory);
-
-/* ===== Profile ===== */
-async function loadProfile(){
-  const res = await apiGet('getProfile', { email: state.currentUser.email });
-  if(!res.success){ toast('โหลดโปรไฟล์ไม่สำเร็จ'); return; }
-  $('#profLevelName').textContent = 'Level '+res.level+' — '+res.levelName;
-  $('#profExp').textContent = res.exp+' EXP';
-  const range = res.nextLevelMinExp ? (res.nextLevelMinExp-res.currentLevelMinExp) : 1;
-  const progress = res.nextLevelMinExp ? Math.min(100, Math.round(((res.exp-res.currentLevelMinExp)/range)*100)) : 100;
-  $('#profBar').style.width = progress+'%';
-  $('#profNext').textContent = res.nextLevelMinExp ? ('อีก '+(res.nextLevelMinExp-res.exp)+' EXP ถึง Lv.'+res.nextLevelName) : 'ระดับสูงสุดแล้ว';
-  $('#statLogs').textContent = res.stats.logs;
-  $('#statProblems').textContent = res.stats.problems;
-  $('#statKnowledge').textContent = res.stats.knowledge;
-  $('#statHelpful').textContent = res.stats.helpful;
-  $('#badgeGrid').innerHTML = res.badges.map(b=>`<div class="badge ${b.earned?'earned':''}"><span class="bic">${b.icon}</span>${b.name}</div>`).join('');
-  const cats = Object.keys(res.monthSummary.byCategory);
-  $('#monthSummary').innerHTML = cats.length ? (`<p style="font-size:13px;">รวม <b>${res.monthSummary.total}</b> รายการ</p>`+cats.map(c=>`<div class="row"><span>${catInfo(c).icon} ${catInfo(c).name}</span><b>${res.monthSummary.byCategory[c]}</b></div>`).join('')) : '<p class="note">ยังไม่มีข้อมูลเดือนนี้</p>';
-  $('#xpPillBtn').textContent = 'Lv.'+res.level+' ⭐'+res.exp;
-}
-
-/* ===== Init: ถ้ามี Login ค้างไว้ ให้เข้าเลย ===== */
-document.addEventListener('DOMContentLoaded', ()=>{
-  const savedEmail = localStorage.getItem('kku_user_email');
-  if(savedEmail){
-    state.currentUser = { email: savedEmail };
-    $('#bottomNav').classList.remove('hidden');
-    showView('home');
-  }
-});
-})();
-</script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
